@@ -1,6 +1,6 @@
 # Redgraph
 
-A simple RedisGraph library.
+A simple RedisGraph library. This gem owes **a lot** to the existing [redisgraph-rb](https://github.com/RedisGraph/redisgraph-rb) gem, but tries to provide a friendlier interface, similar to the existing Python and Elixir clients.
 
 ## Installation
 
