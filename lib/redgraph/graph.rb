@@ -18,5 +18,17 @@ module Redgraph
       module_graph = modules.detect { |_, name, _, version| name == 'graph' }
       module_graph[3] if module_graph
     end
+
+    # Deletes an existing graph
+    #
+    def delete
+      @connection.call("GRAPH.DELETE", graph_name)
+    end
+
+    # Returns an array of existing graphs
+    #
+    def list
+      @connection.call("GRAPH.LIST")
+    end
   end
 end
