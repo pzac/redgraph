@@ -20,7 +20,11 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Basic usage:
+
+    graph = Redgraph::Graph.new('movies', url: "redis://localhost:6379/1")
+    actor = Redgraph::Node.new(label: 'actor', attributes: {name: "Al Pacino"})
+    graph.add_node(actor)
 
 ## Development
 

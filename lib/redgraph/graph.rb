@@ -30,5 +30,34 @@ module Redgraph
     def list
       @connection.call("GRAPH.LIST")
     end
+
+    # Adds a node
+    #
+    def add_node(node)
+      query("CREATE (n:`#{node.label}` #{quote_hash(node.properties)}) RETURN n")
+    end
+
+    private
+
+    def query(cmd)
+      data = @connection.call("GRAPH.QUERY", graph_name, cmd, "--compact")
+      QueryResponse.new(data)
+    end
+
+    def quote_hash(hash)
+      out = "{"
+      hash.each do |k,v|
+        out += "#{k}:#{escape_value(v)}"
+      end
+      out +"}"
+    end
+
+    def escape_value(x)
+      case x
+      when Integer then x
+      else
+        "'#{x}'"
+      end
+    end
   end
 end
