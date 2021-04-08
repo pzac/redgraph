@@ -1,6 +1,6 @@
 # Redgraph
 
-A simple RedisGraph library. This gem owes **a lot** to the existing [redisgraph-rb](https://github.com/RedisGraph/redisgraph-rb) gem, but tries to provide a friendlier interface, similar to the existing Python and Elixir clients.
+A simple RedisGraph library. This gem owes **a lot** to the existing [redisgraph-rb](https://github.com/RedisGraph/redisgraph-rb) gem, but tries to provide a friendlier interface, similar to the existing [Python](https://github.com/RedisGraph/redisgraph-py) and [Elixir](https://github.com/crflynn/redisgraph-ex) clients.
 
 ## Installation
 
@@ -25,6 +25,8 @@ Basic usage:
     graph = Redgraph::Graph.new('movies', url: "redis://localhost:6379/1")
     actor = Redgraph::Node.new(label: 'actor', attributes: {name: "Al Pacino"})
     graph.add_node(actor)
+    film = Redgraph::Node.new(label: 'film', attributes: {name: "Scarface"})
+    graph.add_node(film)
 
 ## Development
 
