@@ -44,6 +44,8 @@ module Redgraph
         case label
         when /^Nodes created/
           stats[:nodes_created] = value.to_i
+        when /^Relationships created/
+          stats[:relationships_created] = value.to_i
         when /^Properties set/
           stats[:properties_set] = value.to_i
         when /^Query internal execution time/
