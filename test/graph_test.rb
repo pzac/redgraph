@@ -3,24 +3,33 @@
 require "test_helper"
 
 class GraphTest < Minitest::Test
-  def test_a_bad_connection
-    assert_raises(Redis::CannotConnectError) do
-      Redgraph::Graph.new("foobar", url: "redis://localhost:1")
-    end
+  def setup
+    @graph = create_sample_graph("foobar")
+  end
+
+  def teardown
+    @graph.delete
   end
 
   def test_list
-    @graph = create_sample_graph("foobar")
     list = @graph.list
     assert_includes(list, "foobar")
   end
 
   def test_delete
-    @graph = create_sample_graph("foobar")
     assert_includes(@graph.list, "foobar")
 
     @graph.delete
     refute_includes(@graph.list, "foobar")
+  end
+
+  def test_labels
+    @graph = create_sample_graph("foobar")
+    assert_equal(["actor"], @graph.labels)
+
+    node = Redgraph::Node.new(label: "film")
+    @graph.add_node(node)
+    assert_equal(["actor", "film"], @graph.labels)
   end
 
   private
@@ -30,7 +39,7 @@ class GraphTest < Minitest::Test
     graph.connection.call(
       "GRAPH.QUERY",
       name,
-      "CREATE (:node {name: 'hello'})"
+      "CREATE (:actor {name: 'hello'})"
     )
     graph
   end

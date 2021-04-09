@@ -23,6 +23,10 @@ module Redgraph
     #
     def delete
       @connection.call("GRAPH.DELETE", graph_name)
+    rescue Redis::CommandError => e
+      # Catch exception if the graph was already deleted
+      return nil if e.message =~ /ERR Invalid graph operation on empty key/
+      raise e
     end
 
     # Returns an array of existing graphs
@@ -30,6 +34,14 @@ module Redgraph
     def list
       @connection.call("GRAPH.LIST")
     end
+
+    # Returns an array of existing labels
+    #
+    def labels
+      result = query("CALL db.labels()")
+      result.resultset.map(&:values).flatten
+    end
+
 
     # Adds a node. If successul it returns the created object, otherwise false
     #
