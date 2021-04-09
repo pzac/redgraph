@@ -31,10 +31,14 @@ module Redgraph
       @connection.call("GRAPH.LIST")
     end
 
-    # Adds a node
+    # Adds a node. If successul it returns the created object, otherwise false
     #
     def add_node(node)
-      query("CREATE (n:`#{node.label}` #{quote_hash(node.properties)}) RETURN n")
+      result = query("CREATE (n:`#{node.label}` #{quote_hash(node.properties)}) RETURN ID(n)")
+      return false if result.stats[:nodes_created] != 1
+      id = result.resultset.first["ID(n)"]
+      node.id = id
+      node
     end
 
     private
@@ -49,7 +53,7 @@ module Redgraph
       hash.each do |k,v|
         out += "#{k}:#{escape_value(v)}"
       end
-      out +"}"
+      out + "}"
     end
 
     def escape_value(x)

@@ -18,7 +18,22 @@ module Redgraph
       @stats ||= parse_stats
     end
 
+    def entities
+      @entities ||= parse_header
+    end
+
+    def resultset
+      @resultset ||= parse_resultset
+    end
+
     private
+
+    # The header lists the entities described in the RETURN clause. It is an
+    # array of [ColumnType (enum), name (string)] elements. We can ignore the
+    # enum, it is always 1 (COLUMN_SCALAR).
+    def parse_header
+      @response[0].map{|item| item[1]}
+    end
 
     def parse_stats
       stats = {}
@@ -37,6 +52,19 @@ module Redgraph
       end
 
       stats
+    end
+
+    # The resultset has one element per entity (as described by the header)
+    def parse_resultset
+      @response[1].map do |item|
+        out = {}
+
+        item.each.with_index do |(type, value), i|
+          out[entities[i]] = value
+        end
+
+        out
+      end
     end
   end
 end

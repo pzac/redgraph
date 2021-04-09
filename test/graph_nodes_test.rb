@@ -14,7 +14,6 @@ class GraphNodesTest < Minitest::Test
   def test_add_node
     node = Redgraph::Node.new(label: 'actor', properties: {name: "Al Pacino"})
     result = @graph.add_node(node)
-
-    assert_equal(1, result.stats[:nodes_created])
+    assert_predicate result, :persisted?
   end
 end
