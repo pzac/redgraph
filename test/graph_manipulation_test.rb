@@ -2,7 +2,7 @@
 
 require "test_helper"
 
-class GraphNodesTest < Minitest::Test
+class GraphManipulationTest < Minitest::Test
   def setup
     @graph = Redgraph::Graph.new("movies", url: $REDIS_URL)
   end
