@@ -73,6 +73,21 @@ module Redgraph
       end
     end
 
+    def nodes
+      result = query("MATCH (node) RETURN node")
+      result.resultset.map do |item|
+        (node_id, labels, properties) = item["node"]
+        attrs = {}
+
+        properties.each do |(index, type, value)|
+          attrs[get_property(index)] = value
+        end
+        Node.new(label: get_label(labels.first), properties: attrs).tap do |node|
+          node.id = node_id
+        end
+      end
+    end
+
     # Adds an edge. If successul it returns the created object, otherwise false
     #
     def add_edge(edge)
