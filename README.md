@@ -40,6 +40,14 @@ Find a node by id:
 
     @graph.find_node_by_id(123)
 
+To get all nodes:
+
+    @graph.nodes
+
+Optional filters:
+
+    @graph.nodes(label: 'actor')
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run 

@@ -73,8 +73,12 @@ module Redgraph
       end
     end
 
-    def nodes
-      result = query("MATCH (node) RETURN node")
+    def nodes(label: nil)
+      node_or_node_with_label = label ? "node:`#{label}`" : "node"
+
+      cmd = "MATCH (#{node_or_node_with_label}) RETURN node"
+      result = query(cmd)
+
       result.resultset.map do |item|
         (node_id, labels, properties) = item["node"]
         attrs = {}

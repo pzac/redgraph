@@ -8,6 +8,7 @@ class GraphQueriesTest < Minitest::Test
     @actor = Redgraph::Node.new(label: 'actor', properties: {name: "Al Pacino"})
     @graph.add_node(@actor)
 
+    @other_actor = Redgraph::Node.new(label: 'actor', properties: {name: "John Travolta"})
     refute_nil(@actor.id)
   end
 
@@ -25,14 +26,28 @@ class GraphQueriesTest < Minitest::Test
   end
 
   def test_get_all_nodes
-    @other_actor = Redgraph::Node.new(label: 'actor', properties: {name: "John Travolta"})
     @graph.add_node(@other_actor)
 
     actors = @graph.nodes
+
+    assert_equal(2, actors.size)
+    assert_includes(actors, @actor)
+    assert_includes(actors, @other_actor)
+  end
+
+  def test_get_all_nodes_by_label
+    @graph.add_node(@other_actor)
+    film = Redgraph::Node.new(label: 'film', properties: {name: "Scarface"})
+    @graph.add_node(film)
+
+    actors = @graph.nodes(label: 'actor')
     assert_equal(2, actors.size)
     assert_includes(actors, @actor)
     assert_includes(actors, @other_actor)
 
+    films = @graph.nodes(label: 'film')
+    assert_equal(1, films.size)
+    assert_includes(films, film)
   end
 
   def test_find_node_by_wrong_id
