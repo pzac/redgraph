@@ -23,10 +23,22 @@ Or install it yourself as:
 Basic usage:
 
     graph = Redgraph::Graph.new('movies', url: "redis://localhost:6379/1")
+
+Create a couple nodes:
+
     actor = Redgraph::Node.new(label: 'actor', attributes: {name: "Al Pacino"})
     graph.add_node(actor)
     film = Redgraph::Node.new(label: 'film', attributes: {name: "Scarface"})
     graph.add_node(film)
+
+Create an edge between those nodes:
+
+    edge = Redgraph::Edge.new(src: actor, dest: film, type: 'ACTOR_IN', properties: {role: "Tony Montana"})
+    result = @graph.add_edge(edge)
+
+Find a node by id:
+
+    @graph.find_node_by_id(123)
 
 ## Development
 
