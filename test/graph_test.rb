@@ -32,6 +32,16 @@ class GraphTest < Minitest::Test
     assert_equal(["actor", "film"], @graph.labels)
   end
 
+  def test_properties
+    @graph = create_sample_graph("foobar")
+    assert_equal(["name"], @graph.properties)
+
+    node = Redgraph::Node.new(label: "actor", properties: {"age": 100})
+    @graph.add_node(node)
+
+    assert_equal(["name", "age"], @graph.properties)
+  end
+
   private
 
   def create_sample_graph(name)

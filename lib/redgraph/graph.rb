@@ -42,6 +42,12 @@ module Redgraph
       result.resultset.map(&:values).flatten
     end
 
+    # Returns an array of existing properties
+    #
+    def properties
+      result = query("CALL db.propertyKeys()")
+      result.resultset.map(&:values).flatten
+    end
 
     # Adds a node. If successul it returns the created object, otherwise false
     #
@@ -51,6 +57,20 @@ module Redgraph
       id = result.resultset.first["ID(n)"]
       node.id = id
       node
+    end
+
+    def find_node_by_id(id)
+      result = query("MATCH (node) WHERE ID(node) = #{id} RETURN node")
+      return nil if result.resultset.empty?
+      (node_id, labels, properties) = result.resultset.first["node"]
+      attrs = {}
+
+      properties.each do |(index, type, value)|
+        attrs[get_property(index)] = value
+      end
+      Node.new(label: get_label(labels.first), properties: attrs).tap do |node|
+        node.id = node_id
+      end
     end
 
     # Adds an edge. If successul it returns the created object, otherwise false
@@ -86,6 +106,16 @@ module Redgraph
       else
         "'#{x}'"
       end
+    end
+
+    def get_label(id)
+      @labels ||= labels
+      @labels[id] || (@labels = labels)[id]
+    end
+
+    def get_property(id)
+      @properties ||= properties
+      @properties[id] || (@properties = properties)[id]
     end
   end
 end
