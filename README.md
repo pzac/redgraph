@@ -47,6 +47,7 @@ To get all nodes:
 Optional filters:
 
     @graph.nodes(label: 'actor')
+    @graph.nodes(properties: {name: "Al Pacino"})
 
 ## Development
 

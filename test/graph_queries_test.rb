@@ -50,6 +50,17 @@ class GraphQueriesTest < Minitest::Test
     assert_includes(films, film)
   end
 
+  def test_find_all_nodes_by_property
+    scarface = quick_add_node(label: 'film', properties: {name: "Scarface", genre: "drama"})
+    casino = quick_add_node(label: 'film', properties: {name: "Casino", genre: "drama"})
+    mamma_mia = quick_add_node(label: 'film', properties: {name: "Mamma Mia", genre: "musical"})
+
+    dramas = @graph.nodes(properties: {genre: "drama"})
+
+    assert_equal(2, dramas.size)
+    assert_includes(dramas, scarface)
+    assert_includes(dramas, casino)
+  end
 
   private
 

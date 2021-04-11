@@ -73,17 +73,18 @@ module Redgraph
       end
     end
 
-    def nodes(label: nil)
-      node_or_node_with_label = label ? "node:`#{label}`" : "node"
+    def nodes(label: nil, properties: nil)
+      label_filter = ":`#{label}`" if label
+      props_filter = quote_hash(properties) if properties
 
-      cmd = "MATCH (#{node_or_node_with_label}) RETURN node"
+      cmd = "MATCH (node#{label_filter} #{props_filter}) RETURN node"
       result = query(cmd)
 
       result.resultset.map do |item|
-        (node_id, labels, properties) = item["node"]
+        (node_id, labels, props) = item["node"]
         attrs = {}
 
-        properties.each do |(index, type, value)|
+        props.each do |(index, type, value)|
           attrs[get_property(index)] = value
         end
         Node.new(label: get_label(labels.first), properties: attrs).tap do |node|
@@ -112,11 +113,9 @@ module Redgraph
     end
 
     def quote_hash(hash)
-      out = "{"
-      hash.each do |k,v|
-        out += "#{k}:#{escape_value(v)}"
-      end
-      out + "}"
+      "{" +
+      hash.map {|k,v| "#{k}:#{escape_value(v)}" }.join(", ") +
+      "}"
     end
 
     def escape_value(x)
