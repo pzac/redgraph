@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    redgraph (0.1.0)
+    redgraph (0.1.1)
       redis (~> 4)
 
 GEM
