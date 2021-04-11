@@ -73,11 +73,20 @@ module Redgraph
       end
     end
 
-    def nodes(label: nil, properties: nil)
-      label_filter = ":`#{label}`" if label
-      props_filter = quote_hash(properties) if properties
+    # Returns nodes. Options:
+    #
+    # - label: filter by label
+    # - properties: filter by properties
+    # - limit: number of items
+    # - skip: items offset (useful for pagination)
+    #
+    def nodes(label: nil, properties: nil, limit: nil, skip: nil)
+      _label = ":`#{label}`" if label
+      _props = quote_hash(properties) if properties
+      _limit = "LIMIT #{limit}" if limit
+      _skip = "SKIP #{skip}" if skip
 
-      cmd = "MATCH (node#{label_filter} #{props_filter}) RETURN node"
+      cmd = "MATCH (node#{_label} #{_props}) RETURN node #{_skip} #{_limit}"
       result = query(cmd)
 
       result.resultset.map do |item|

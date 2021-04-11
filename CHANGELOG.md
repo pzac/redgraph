@@ -1,6 +1,8 @@
 ## [Unreleased]
 
-- Graph#nodes allows filtering by properties
+- Graph#nodes:
+    - filter by properties
+    - skip and limit options
 
 ## [0.1.0] - 2021-04-08
 

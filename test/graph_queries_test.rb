@@ -62,6 +62,26 @@ class GraphQueriesTest < Minitest::Test
     assert_includes(dramas, casino)
   end
 
+  def test_limit_nodes
+    10.times do |i|
+      quick_add_node(label: 'token', properties: {number: i})
+    end
+
+    items = @graph.nodes(label: 'token', limit: 5)
+    assert_equal(5, items.size)
+    assert_equal([0,1,2,3,4], items.map{|item| item.properties["number"]})
+  end
+
+  def test_skip_nodes
+    10.times do |i|
+      quick_add_node(label: 'token', properties: {number: i})
+    end
+
+    items = @graph.nodes(label: 'token', limit: 3, skip: 3)
+    assert_equal(3, items.size)
+    assert_equal([3,4,5], items.map{|item| item.properties["number"]})
+  end
+
   private
 
   def quick_add_node(label:, properties:)
