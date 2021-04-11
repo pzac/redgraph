@@ -128,8 +128,18 @@ module Redgraph
       edge
     end
 
-    def edges
-      cmd = "MATCH (src)-[edge]->(dest) RETURN src, edge, dest"
+    # Finds edges. Options:
+    #
+    # - kind
+    # - limit
+    # - skip
+    #
+    def edges(type: nil, limit: nil, skip: nil)
+      _type = ":`#{type}`" if type
+      _limit = "LIMIT #{limit}" if limit
+      _skip = "SKIP #{skip}" if skip
+
+      cmd = "MATCH (src)-[edge#{_type}]->(dest) RETURN src, edge, dest  #{_skip} #{_limit}"
       result = query(cmd)
 
       result.resultset.map do |item|

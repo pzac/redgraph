@@ -114,6 +114,28 @@ class GraphQueriesTest < Minitest::Test
     assert_equal(2, edges.size)
   end
 
+  def test_filter_edges
+    marlon = quick_add_node(label: 'actor', properties: {name: "Marlon Brando"})
+    film = quick_add_node(label: 'film', properties: {name: "The Godfather"})
+    other_film = quick_add_node(label: 'film', properties: {name: "Carlito's Way"})
+    quick_add_edge(type: 'ACTOR_IN', src: marlon, dest: film, properties: {role: 'Don Vito'})
+    quick_add_edge(type: 'ACTOR_IN', src: @al,    dest: film, properties: {role: 'Michael'})
+    quick_add_edge(type: 'ACTOR_IN', src: @al,    dest: other_film, properties: {role: 'Carlito'})
+    quick_add_edge(type: 'FRIEND_OF', src: @al,   dest: film, properties: {since: 1980})
+
+    edges = @graph.edges(type: "FRIEND_OF")
+    assert_equal(1, edges.size)
+
+    edges = @graph.edges(type: "ACTOR_IN")
+    assert_equal(3, edges.size)
+
+    edges = @graph.edges(type: "ACTOR_IN", limit: 2)
+    assert_equal(2, edges.size)
+
+    edges = @graph.edges(type: "ACTOR_IN", skip: 2, limit: 10)
+    assert_equal(1, edges.size)
+  end
+
   private
 
   def quick_add_node(label:, properties:)
