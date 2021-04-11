@@ -62,6 +62,17 @@ class GraphQueriesTest < Minitest::Test
     assert_includes(dramas, casino)
   end
 
+  def test_count_nodes
+    quick_add_node(label: 'film', properties: {name: "Scarface", genre: "drama"})
+    quick_add_node(label: 'film', properties: {name: "Casino", genre: "drama"})
+    quick_add_node(label: 'film', properties: {name: "Mamma Mia", genre: "musical"})
+
+
+    assert_equal(5, @graph.count_nodes)
+    assert_equal(3, @graph.count_nodes(label: 'film'))
+    assert_equal(2, @graph.count_nodes(properties: {genre: "drama"}))
+  end
+
   def test_limit_nodes
     10.times do |i|
       quick_add_node(label: 'token', properties: {number: i})

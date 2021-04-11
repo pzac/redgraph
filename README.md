@@ -52,6 +52,10 @@ Optional filters that can be combined:
     @graph.nodes(properties: {name: "Al Pacino"})
     @graph.nodes(limit: 10, skip: 20)
 
+Counting nodes
+
+    @graph.count_nodes(label: 'actor')
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run 

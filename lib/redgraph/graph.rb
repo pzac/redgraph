@@ -102,6 +102,21 @@ module Redgraph
       end
     end
 
+    # Counts nodes. Options:
+    #
+    # - label: filter by label
+    # - properties: filter by properties
+    #
+    def count_nodes(label: nil, properties: nil)
+      _label = ":`#{label}`" if label
+      _props = quote_hash(properties) if properties
+
+      cmd = "MATCH (node#{_label} #{_props}) RETURN COUNT(node)"
+      result = query(cmd)
+
+      result.resultset.first["COUNT(node)"]
+    end
+
     # Adds an edge. If successul it returns the created object, otherwise false
     #
     def add_edge(edge)
