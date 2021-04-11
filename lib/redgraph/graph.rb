@@ -49,6 +49,13 @@ module Redgraph
       result.resultset.map(&:values).flatten
     end
 
+    # Returns an array of existing relationship types
+    #
+    def relationship_types
+      result = query("CALL db.relationshipTypes()")
+      result.resultset.map(&:values).flatten
+    end
+
     # Adds a node. If successul it returns the created object, otherwise false
     #
     def add_node(node)

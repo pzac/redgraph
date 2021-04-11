@@ -42,6 +42,19 @@ class GraphTest < Minitest::Test
     assert_equal(["name", "age"], @graph.properties)
   end
 
+  def test_relationship_types
+    @graph = create_sample_graph("foobar")
+
+    actor = Redgraph::Node.new(label: "actor", properties: {"name": "Harrison Ford"})
+    @graph.add_node(actor)
+    film = Redgraph::Node.new(label: "film", properties: {"name": "Star Wars"})
+    @graph.add_node(film)
+    edge = Redgraph::Edge.new(type: "ACTED_IN", src: actor, dest: film)
+    @graph.add_edge(edge)
+
+    assert_equal(["ACTED_IN"], @graph.relationship_types)
+  end
+
   private
 
   def create_sample_graph(name)
