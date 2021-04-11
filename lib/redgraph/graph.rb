@@ -145,8 +145,9 @@ module Redgraph
     def escape_value(x)
       case x
       when Integer then x
+      when NilClass then "''"
       else
-        "'#{x}'"
+        '"' + x.gsub('"', '\"') + '"'
       end
     end
 
