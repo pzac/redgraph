@@ -4,7 +4,7 @@ module Redgraph
   class Edge
     attr_accessor :id, :src, :dest, :type, :properties
 
-    def initialize(src:, dest:, type:, properties: {})
+    def initialize(src: nil, dest: nil, type: nil, properties: {})
       @src = src
       @dest = dest
       @type = type

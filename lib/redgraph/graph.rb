@@ -97,15 +97,7 @@ module Redgraph
       result = query(cmd)
 
       result.resultset.map do |item|
-        (node_id, labels, props) = item["node"]
-        attrs = {}
-
-        props.each do |(index, type, value)|
-          attrs[get_property(index)] = value
-        end
-        Node.new(label: get_label(labels.first), properties: attrs).tap do |node|
-          node.id = node_id
-        end
+        node_from_resultset_item(item["node"])
       end
     end
 
@@ -134,6 +126,22 @@ module Redgraph
       id = result.resultset.first["ID(e)"]
       edge.id = id
       edge
+    end
+
+    def edges
+      cmd = "MATCH (src)-[edge]->(dest) RETURN src, edge, dest"
+      result = query(cmd)
+
+      result.resultset.map do |item|
+        src = node_from_resultset_item(item["src"])
+        dest = node_from_resultset_item(item["dest"])
+        edge = edge_from_resultset_item(item["edge"])
+
+        edge.src = src
+        edge.dest = dest
+
+        edge
+      end
     end
 
     private
@@ -166,6 +174,40 @@ module Redgraph
     def get_property(id)
       @properties ||= properties
       @properties[id] || (@properties = properties)[id]
+    end
+
+    def get_relationship_type(id)
+      @relationship_types ||= relationship_types
+      @relationship_types[id] || (@relationship_types = relationship_types)[id]
+    end
+
+    # Builds a Node object from the raw data
+    #
+    def node_from_resultset_item(item)
+      (node_id, labels, props) = item
+      attrs = {}
+
+      props.each do |(index, type, value)|
+        attrs[get_property(index)] = value
+      end
+      Node.new(label: get_label(labels.first), properties: attrs).tap do |node|
+        node.id = node_id
+      end
+    end
+
+    def edge_from_resultset_item(item)
+      (edge_id, type_id, _src_id, _dest_id, props) = item
+      attrs = {}
+
+      props.each do |(index, type, value)|
+        attrs[get_property(index)] = value
+      end
+
+      Edge.new.tap do |edge|
+        edge.id = edge_id
+        edge.type = get_relationship_type(type_id)
+        edge.properties = attrs
+      end
     end
   end
 end

@@ -56,6 +56,10 @@ Counting nodes
 
     @graph.count_nodes(label: 'actor')
 
+Getting edges:
+
+    @graph.edges
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run 

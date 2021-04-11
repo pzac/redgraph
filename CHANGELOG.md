@@ -1,6 +1,7 @@
 ## [] - 2021-04
 
 - Add Graph#count_nodes
+- Add Graph#edges
 
 ## [0.1.1] - 2021-04-11
 

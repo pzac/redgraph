@@ -93,9 +93,34 @@ class GraphQueriesTest < Minitest::Test
     assert_equal([3,4,5], items.map{|item| item.properties["number"]})
   end
 
+  def test_find_edge
+    quick_add_edge(type: 'FRIEND_OF', src: @al, dest: @john, properties: {since: 1980})
+    edge = @graph.edges.first
+
+    assert_equal('FRIEND_OF', edge.type)
+    assert_equal(1980, edge.properties["since"])
+    assert_equal(@al, edge.src)
+    assert_equal(@john, edge.dest)
+
+  end
+
+  def test_find_all_edges
+    marlon = quick_add_node(label: 'actor', properties: {name: "Marlon Brando"})
+    film = quick_add_node(label: 'film', properties: {name: "The Godfather"})
+    quick_add_edge(type: 'ACTOR_IN', src: marlon, dest: film, properties: {role: 'Don Vito'})
+    quick_add_edge(type: 'ACTOR_IN', src: @al,    dest: film, properties: {role: 'Michael'})
+
+    edges = @graph.edges
+    assert_equal(2, edges.size)
+  end
+
   private
 
   def quick_add_node(label:, properties:)
     @graph.add_node(Redgraph::Node.new(label: label, properties: properties))
+  end
+
+  def quick_add_edge(type:, src:, dest:, properties:)
+    @graph.add_edge(Redgraph::Edge.new(type: type, src: src, dest: dest, properties: properties))
   end
 end
