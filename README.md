@@ -62,7 +62,7 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run
 
     TEST_REDIS_URL=YOUR-REDIS-URL rake test
 
-to run the tests.
+to run the tests. Test coverage will be enabled if you set the `COVERAGE` environment variable to any value.
 
 You can use a `TEST_REDIS_URL` such as `redis://localhost:6379/1`. Make sure you're not overwriting important databases.
 
