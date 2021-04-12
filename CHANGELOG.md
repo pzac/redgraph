@@ -1,5 +1,6 @@
-## [] - 2021-04
+## [0.1.2] - 2021-04-12
 
+- Add Graph#relationship_types
 - Add Graph#count_nodes
 - Add Graph#edges
 
