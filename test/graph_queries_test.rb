@@ -53,13 +53,28 @@ class GraphQueriesTest < Minitest::Test
   def test_find_all_nodes_by_property
     scarface = quick_add_node(label: 'film', properties: {name: "Scarface", genre: "drama"})
     casino = quick_add_node(label: 'film', properties: {name: "Casino", genre: "drama"})
-    mamma_mia = quick_add_node(label: 'film', properties: {name: "Mamma Mia", genre: "musical"})
+    _mamma_mia = quick_add_node(label: 'film', properties: {name: "Mamma Mia", genre: "musical"})
 
     dramas = @graph.nodes(properties: {genre: "drama"})
 
     assert_equal(2, dramas.size)
     assert_includes(dramas, scarface)
     assert_includes(dramas, casino)
+  end
+
+  def test_order_nodes_by_property
+    scarface = quick_add_node(label: 'film', properties: {name: "Scarface", genre: "drama"})
+    casino = quick_add_node(label: 'film', properties: {name: "Casino", genre: "drama"})
+    mamma_mia = quick_add_node(label: 'film', properties: {name: "Mamma Mia", genre: "musical"})
+
+    items = @graph.nodes(label: 'film', order: "node.name")
+    assert_equal([casino, mamma_mia, scarface], items)
+
+    items = @graph.nodes(label: 'film', order: "node.name ASC")
+    assert_equal([casino, mamma_mia, scarface], items)
+
+    items = @graph.nodes(label: 'film', order: "node.name DESC")
+    assert_equal([scarface, mamma_mia, casino], items)
   end
 
   def test_count_nodes
@@ -151,6 +166,20 @@ class GraphQueriesTest < Minitest::Test
     edge = edges[0]
     assert_equal('FRIEND_OF', edge.type)
     assert_equal(1980, edge.properties["since"])
+  end
+
+  def test_order_edges
+    marlon = quick_add_node(label: 'actor', properties: {name: "Marlon Brando"})
+
+    e1 = quick_add_edge(type: 'FRIEND_OF', src: @al, dest: marlon, properties: {since: 1980})
+    e2 = quick_add_edge(type: 'FRIEND_OF', src: @al, dest: @john, properties: {since: 2000})
+    e3 = quick_add_edge(type: 'FRIEND_OF', src: marlon, dest: @john, properties: {since: 1990})
+
+    edges = @graph.edges(type: 'FRIEND_OF', order: "edge.since ASC")
+    assert_equal([e1, e3, e2], edges)
+
+    edges = @graph.edges(type: 'FRIEND_OF', order: "edge.since DESC")
+    assert_equal([e2, e3, e1], edges)
   end
 
   private

@@ -1,3 +1,8 @@
+## [0.1.3] - 2021-04-
+
+- nodes and edges query now allow the `order` option
+
+
 ## [0.1.2] - 2021-04-12
 
 - Add Graph#relationship_types

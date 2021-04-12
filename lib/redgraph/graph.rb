@@ -84,16 +84,22 @@ module Redgraph
     #
     # - label: filter by label
     # - properties: filter by properties
+    # - order: node.name ASC, node.year DESC
     # - limit: number of items
     # - skip: items offset (useful for pagination)
     #
-    def nodes(label: nil, properties: nil, limit: nil, skip: nil)
+    def nodes(label: nil, properties: nil, order: nil, limit: nil, skip: nil)
       _label = ":`#{label}`" if label
       _props = quote_hash(properties) if properties
+      _order = if order
+        raise MissingAliasPrefixError unless order.include?("node.")
+        "ORDER BY #{order}"
+      end
       _limit = "LIMIT #{limit}" if limit
       _skip = "SKIP #{skip}" if skip
 
-      cmd = "MATCH (node#{_label} #{_props}) RETURN node #{_skip} #{_limit}"
+      cmd = "MATCH (node#{_label} #{_props}) RETURN node #{_order} #{_skip} #{_limit}"
+
       result = query(cmd)
 
       result.resultset.map do |item|
@@ -134,12 +140,17 @@ module Redgraph
     # - src
     # - dest
     # - properties
+    # - order
     # - limit
     # - skip
     #
-    def edges(type: nil, src: nil, dest: nil, properties: nil, limit: nil, skip: nil)
+    def edges(type: nil, src: nil, dest: nil, properties: nil, order: nil, limit: nil, skip: nil)
       _type = ":`#{type}`" if type
       _props = quote_hash(properties) if properties
+      _order = if order
+        raise MissingAliasPrefixError unless order.include?("edge.")
+        "ORDER BY #{order}"
+      end
       _limit = "LIMIT #{limit}" if limit
       _skip = "SKIP #{skip}" if skip
 
@@ -152,7 +163,7 @@ module Redgraph
       end
 
       cmd = "MATCH (src)-[edge#{_type} #{_props}]->(dest) #{_where}
-             RETURN src, edge, dest #{_skip} #{_limit}"
+             RETURN src, edge, dest #{_order} #{_skip} #{_limit}"
       result = query(cmd)
 
       result.resultset.map do |item|
