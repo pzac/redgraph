@@ -14,5 +14,9 @@ module Redgraph
     def persisted?
       !id.nil?
     end
+
+    def ==(other)
+      super || other.instance_of?(self.class) && !id.nil? && other.id == id
+    end
   end
 end

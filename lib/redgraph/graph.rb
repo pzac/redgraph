@@ -130,16 +130,29 @@ module Redgraph
 
     # Finds edges. Options:
     #
-    # - kind
+    # - type
+    # - src
+    # - dest
+    # - properties
     # - limit
     # - skip
     #
-    def edges(type: nil, limit: nil, skip: nil)
+    def edges(type: nil, src: nil, dest: nil, properties: nil, limit: nil, skip: nil)
       _type = ":`#{type}`" if type
+      _props = quote_hash(properties) if properties
       _limit = "LIMIT #{limit}" if limit
       _skip = "SKIP #{skip}" if skip
 
-      cmd = "MATCH (src)-[edge#{_type}]->(dest) RETURN src, edge, dest  #{_skip} #{_limit}"
+      _where = if src || dest
+        clauses = [
+          ("ID(src) = #{src.id}" if src),
+          ("ID(dest) = #{dest.id}" if dest)
+        ].compact.join(" AND ")
+        "WHERE #{clauses}"
+      end
+
+      cmd = "MATCH (src)-[edge#{_type} #{_props}]->(dest) #{_where}
+             RETURN src, edge, dest #{_skip} #{_limit}"
       result = query(cmd)
 
       result.resultset.map do |item|

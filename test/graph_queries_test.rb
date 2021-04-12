@@ -118,10 +118,10 @@ class GraphQueriesTest < Minitest::Test
     marlon = quick_add_node(label: 'actor', properties: {name: "Marlon Brando"})
     film = quick_add_node(label: 'film', properties: {name: "The Godfather"})
     other_film = quick_add_node(label: 'film', properties: {name: "Carlito's Way"})
-    quick_add_edge(type: 'ACTOR_IN', src: marlon, dest: film, properties: {role: 'Don Vito'})
-    quick_add_edge(type: 'ACTOR_IN', src: @al,    dest: film, properties: {role: 'Michael'})
-    quick_add_edge(type: 'ACTOR_IN', src: @al,    dest: other_film, properties: {role: 'Carlito'})
-    quick_add_edge(type: 'FRIEND_OF', src: @al,   dest: film, properties: {since: 1980})
+    e_donvito = quick_add_edge(type: 'ACTOR_IN', src: marlon, dest: film, properties: {role: 'Don Vito'})
+    e_michael = quick_add_edge(type: 'ACTOR_IN', src: @al, dest: film, properties: {role: 'Michael'})
+    e_carlito = quick_add_edge(type: 'ACTOR_IN', src: @al, dest: other_film, properties: {role: 'Carlito'})
+    quick_add_edge(type: 'FRIEND_OF', src: @al, dest: marlon, properties: {since: 1980})
 
     edges = @graph.edges(type: "FRIEND_OF")
     assert_equal(1, edges.size)
@@ -134,6 +134,23 @@ class GraphQueriesTest < Minitest::Test
 
     edges = @graph.edges(type: "ACTOR_IN", skip: 2, limit: 10)
     assert_equal(1, edges.size)
+
+    edges = @graph.edges(properties: {role: "Carlito"})
+    assert_equal([e_carlito], edges)
+
+    edges = @graph.edges(src: marlon)
+    assert_equal([e_donvito], edges)
+
+    edges = @graph.edges(type: 'ACTOR_IN', dest: film)
+    assert_equal(2, edges.size)
+    assert_includes(edges, e_donvito)
+    assert_includes(edges, e_michael)
+
+    edges = @graph.edges(src: @al, dest: marlon)
+    assert_equal(1, edges.size)
+    edge = edges[0]
+    assert_equal('FRIEND_OF', edge.type)
+    assert_equal(1980, edge.properties["since"])
   end
 
   private

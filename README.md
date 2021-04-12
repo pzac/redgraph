@@ -59,6 +59,7 @@ Counting nodes
 Getting edges:
 
     @graph.edges
+    @graph.edges(src: actor, dest: film)
     @graph.edges(kind: 'FRIEND_OF', limit: 10, skip: 20)
 
 ## Development
