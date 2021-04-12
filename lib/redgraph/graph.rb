@@ -44,29 +44,49 @@ module Redgraph
     # Returns an array of existing labels
     #
     def labels
-      result = query("CALL db.labels()")
+      result = _query("CALL db.labels()")
       result.resultset.map(&:values).flatten
     end
 
     # Returns an array of existing properties
     #
     def properties
-      result = query("CALL db.propertyKeys()")
+      result = _query("CALL db.propertyKeys()")
       result.resultset.map(&:values).flatten
     end
 
     # Returns an array of existing relationship types
     #
     def relationship_types
-      result = query("CALL db.relationshipTypes()")
+      result = _query("CALL db.relationshipTypes()")
       result.resultset.map(&:values).flatten
+    end
+
+    # You can run custom cypher queries
+    def query(cmd)
+      _query(cmd).rows
+    end
+
+    def get_label(id)
+      @labels ||= labels
+      @labels[id] || (@labels = labels)[id]
+    end
+
+    def get_property(id)
+      @properties ||= properties
+      @properties[id] || (@properties = properties)[id]
+    end
+
+    def get_relationship_type(id)
+      @relationship_types ||= relationship_types
+      @relationship_types[id] || (@relationship_types = relationship_types)[id]
     end
 
     private
 
-    def query(cmd)
+    def _query(cmd)
       data = @connection.call("GRAPH.QUERY", graph_name, cmd, "--compact")
-      QueryResponse.new(data)
+      QueryResponse.new(data, self)
     end
 
     def quote_hash(hash)
@@ -84,19 +104,5 @@ module Redgraph
       end
     end
 
-    def get_label(id)
-      @labels ||= labels
-      @labels[id] || (@labels = labels)[id]
-    end
-
-    def get_property(id)
-      @properties ||= properties
-      @properties[id] || (@properties = properties)[id]
-    end
-
-    def get_relationship_type(id)
-      @relationship_types ||= relationship_types
-      @relationship_types[id] || (@relationship_types = relationship_types)[id]
-    end
   end
 end

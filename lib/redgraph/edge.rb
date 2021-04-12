@@ -2,11 +2,13 @@
 
 module Redgraph
   class Edge
-    attr_accessor :id, :src, :dest, :type, :properties
+    attr_accessor :id, :src, :dest, :src_id, :dest_id, :type, :properties
 
     def initialize(src: nil, dest: nil, type: nil, properties: {})
       @src = src
+      @src_id = @src.id if @src
       @dest = dest
+      @dest_id = @dest.id if @dest
       @type = type
       @properties = properties
     end

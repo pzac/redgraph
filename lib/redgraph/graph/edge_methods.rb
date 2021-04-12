@@ -4,7 +4,7 @@ module Redgraph
       # Adds an edge. If successul it returns the created object, otherwise false
       #
       def add_edge(edge)
-        result = query("MATCH (src), (dest)
+        result = _query("MATCH (src), (dest)
                         WHERE ID(src) = #{edge.src.id} AND ID(dest) = #{edge.dest.id}
                         CREATE (src)-[e:`#{edge.type}` #{quote_hash(edge.properties)}]->(dest) RETURN ID(e)")
         return false if result.stats[:relationships_created] != 1
@@ -43,7 +43,7 @@ module Redgraph
 
         cmd = "MATCH (src)-[edge#{_type} #{_props}]->(dest) #{_where}
                RETURN src, edge, dest #{_order} #{_skip} #{_limit}"
-        result = query(cmd)
+        result = _query(cmd)
 
         result.resultset.map do |item|
           src = node_from_resultset_item(item["src"])

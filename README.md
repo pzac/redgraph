@@ -62,6 +62,11 @@ Getting edges:
     @graph.edges(src: actor, dest: film)
     @graph.edges(kind: 'FRIEND_OF', limit: 10, skip: 20)
 
+Running custom queries
+
+    @graph.query("MATCH (src)-[edge:FRIEND_OF]->(dest) RETURN src, edge")
+
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run 

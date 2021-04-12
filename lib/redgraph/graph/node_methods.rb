@@ -4,7 +4,7 @@ module Redgraph
       # Adds a node. If successul it returns the created object, otherwise false
       #
       def add_node(node)
-        result = query("CREATE (n:`#{node.label}` #{quote_hash(node.properties)}) RETURN ID(n)")
+        result = _query("CREATE (n:`#{node.label}` #{quote_hash(node.properties)}) RETURN ID(n)")
         return false if result.stats[:nodes_created] != 1
         id = result.resultset.first["ID(n)"]
         node.id = id
@@ -12,7 +12,7 @@ module Redgraph
       end
 
       def find_node_by_id(id)
-        result = query("MATCH (node) WHERE ID(node) = #{id} RETURN node")
+        result = _query("MATCH (node) WHERE ID(node) = #{id} RETURN node")
         return nil if result.resultset.empty?
         (node_id, labels, properties) = result.resultset.first["node"]
         attrs = {}
@@ -46,7 +46,7 @@ module Redgraph
 
         cmd = "MATCH (node#{_label} #{_props}) RETURN node #{_order} #{_skip} #{_limit}"
 
-        result = query(cmd)
+        result = _query(cmd)
 
         result.resultset.map do |item|
           node_from_resultset_item(item["node"])
@@ -63,9 +63,7 @@ module Redgraph
         _props = quote_hash(properties) if properties
 
         cmd = "MATCH (node#{_label} #{_props}) RETURN COUNT(node)"
-        result = query(cmd)
-
-        result.resultset.first["COUNT(node)"]
+        query(cmd).flatten[0]
       end
 
       private
