@@ -23,4 +23,5 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "redis", "~> 4"
+  spec.add_dependency "activesupport", ">= 3.0.0"
 end

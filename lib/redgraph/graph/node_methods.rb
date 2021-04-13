@@ -74,7 +74,7 @@ module Redgraph
       #
       def node_from_resultset_item(item)
         (node_id, labels, props) = item
-        attrs = {}
+        attrs = HashWithIndifferentAccess.new
 
         props.each do |(index, type, value)|
           attrs[get_property(index)] = value

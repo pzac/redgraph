@@ -1,3 +1,7 @@
+## [0.1.4]
+
+- edge and node properties are now a HashWithIndifferentAccess
+
 ## [0.1.3] - 2021-04-13
 
 - allow custom queries

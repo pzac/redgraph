@@ -24,7 +24,6 @@ class GraphEdgeMethodsTest < Minitest::Test
     assert_equal(1980, edge.properties["since"])
     assert_equal(@al, edge.src)
     assert_equal(@john, edge.dest)
-
   end
 
   def test_find_all_edges

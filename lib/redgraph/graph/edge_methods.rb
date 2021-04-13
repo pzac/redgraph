@@ -63,7 +63,7 @@ module Redgraph
 
       def edge_from_resultset_item(item)
         (edge_id, type_id, _src_id, _dest_id, props) = item
-        attrs = {}
+        attrs = HashWithIndifferentAccess.new
 
         props.each do |(index, type, value)|
           attrs[get_property(index)] = value

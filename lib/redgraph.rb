@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 require "redis"
+require "active_support/core_ext/hash/indifferent_access"
+require "active_support/core_ext/object/blank"
 
 require_relative "redgraph/version"
 require_relative "redgraph/graph"

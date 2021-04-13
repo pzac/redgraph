@@ -10,11 +10,11 @@ module Redgraph
       @dest = dest
       @dest_id = @dest.id if @dest
       @type = type
-      @properties = properties
+      @properties = properties.with_indifferent_access
     end
 
     def persisted?
-      !id.nil?
+      id.present?
     end
 
     def ==(other)

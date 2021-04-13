@@ -6,11 +6,11 @@ module Redgraph
 
     def initialize(label:, properties: {})
       @label = label
-      @properties = properties
+      @properties = properties.with_indifferent_access
     end
 
     def persisted?
-      !id.nil?
+      id.present?
     end
 
     def ==(other)

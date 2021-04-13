@@ -136,7 +136,7 @@ module Redgraph
     # The resultset has one element per entity (as described by the header)
     def parse_resultset
       @result_rows.map do |item|
-        out = {}
+        out = HashWithIndifferentAccess.new
 
         item.each.with_index do |(type, value), i|
           out[entities[i]] = value
