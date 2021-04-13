@@ -12,11 +12,13 @@ class GraphTest < Minitest::Test
   end
 
   def test_list
+    skip unless graph_list_supported?
     list = @graph.list
     assert_includes(list, "foobar")
   end
 
   def test_delete
+    skip unless graph_list_supported?
     assert_includes(@graph.list, "foobar")
 
     @graph.delete
@@ -65,5 +67,16 @@ class GraphTest < Minitest::Test
       "CREATE (:actor {name: 'hello'})"
     )
     graph
+  end
+
+  # This command is only supported in the latest version
+  def graph_list_supported?
+    @graph.list
+  rescue Redis::CommandError => e
+    if e.message =~ /ERR unknown command `GRAPH.LIST`/
+      false
+    else
+      true
+    end
   end
 end
