@@ -25,26 +25,35 @@ The gem assumes you have a recent version of [RedisGraph](https://oss.redislabs.
 Basic usage:
 
     graph = Redgraph::Graph.new('movies', url: "redis://localhost:6379/1")
+    => #<Redgraph::Graph:0x00007f8d5c2b7e38 @connection=#<Redis client v4.2.5 for redis://localhost:6379/1>, @graph_name="movies", @module_version=999999>
 
 Create a couple nodes:
 
-    actor = Redgraph::Node.new(label: 'actor', attributes: {name: "Al Pacino"})
+    actor = Redgraph::Node.new(label: 'actor', properties: {name: "Al Pacino"})
+    => #<Redgraph::Node:0x00007f8d5f95cf88 @label="actor", @properties={:name=>"Al Pacino"}>
     graph.add_node(actor)
-    film = Redgraph::Node.new(label: 'film', attributes: {name: "Scarface"})
+    => #<Redgraph::Node:0x00007f8d5f95cf88 @id=0, @label="actor", @properties={:name=>"Al Pacino"}>
+    film = Redgraph::Node.new(label: 'film', properties: {name: "Scarface"})
+    => #<Redgraph::Node:0x00007f8d5f85ccc8 @label="film", @properties={:name=>"Scarface"}>
     graph.add_node(film)
+    => #<Redgraph::Node:0x00007f8d5f85ccc8 @id=1, @label="film", @properties={:name=>"Scarface"}>
 
 Create an edge between those nodes:
 
     edge = Redgraph::Edge.new(src: actor, dest: film, type: 'ACTOR_IN', properties: {role: "Tony Montana"})
-    result = @graph.add_edge(edge)
+    => #<Redgraph::Edge:0x00007f8d5f9ae3d8 @dest=#<Redgraph::Node:0x00007f8d5f85ccc8 @id=1, @label="film", @properties={:name=>"Scarface"}>, @dest_id=1, @properties={:role=>"Tony Montana"}, @src=#<Redgraph::Node:0x00007f8d5f95cf88 @id=0, @label="actor", @properties={:name=>"Al Pacino"}>, @src_id=0, @type="ACTOR_IN">
+    @graph.add_edge(edge)
+    => #<Redgraph::Edge:0x00007f8d5f9ae3d8 @dest=#<Redgraph::Node:0x00007f8d5f85ccc8 @id=1, @label="film", @properties={:name=>"Scarface"}>, @dest_id=1, @id=0, @properties={:role=>"Tony Montana"}, @src=#<Redgraph::Node:0x00007f8d5f95cf88 @id=0, @label="actor", @properties={:name=>"Al Pacino"}>, @src_id=0, @type="ACTOR_IN">
 
 Find a node by id:
 
-    @graph.find_node_by_id(123)
+    @graph.find_node_by_id(1)
+    => #<Redgraph::Node:0x00007f8d5c2c6e88 @id=1, @label="film", @properties={"name"=>"Scarface"}>
 
 To get all nodes:
 
     @graph.nodes
+    => [#<Redgraph::Node:0x00007f8d5c2ee0a0 @id=0, @label="actor", @properties={"name"=>"Al Pacino"}>, #<Redgraph::Node:0x00007f8d5c2edfd8 @id=1, @label="film", @properties={"name"=>"Scarface"}>]
 
 Optional filters that can be combined:
 
@@ -55,6 +64,7 @@ Optional filters that can be combined:
 Counting nodes
 
     @graph.count_nodes(label: 'actor')
+    => 1
 
 Getting edges:
 
