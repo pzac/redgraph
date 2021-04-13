@@ -3,6 +3,8 @@
 require "test_helper"
 
 class GraphManipulationTest < Minitest::Test
+  include TestHelpers
+
   def setup
     @graph = Redgraph::Graph.new("movies", url: $REDIS_URL)
   end
@@ -57,5 +59,33 @@ class GraphManipulationTest < Minitest::Test
     result = @graph.add_edge(edge)
 
     assert_predicate result, :persisted?
+  end
+
+  def test_merge_node
+    quick_add_node(label: 'actor', properties: {name: "Al Pacino"})
+    quick_add_node(label: 'actor', properties: {name: "John Travolta"})
+
+    nodes = @graph.nodes(label: 'actor')
+    assert_equal(2, nodes.size)
+
+    @graph.merge_node(Redgraph::Node.new(label: 'actor', properties: {name: "Joe Pesci"}))
+    assert_equal(3, @graph.nodes(label: 'actor').size)
+
+    @graph.merge_node(Redgraph::Node.new(label: 'actor', properties: {name: "Al Pacino"}))
+    assert_equal(3, @graph.nodes(label: 'actor').size)
+  end
+
+  def test_merge_edge
+    al = quick_add_node(label: 'actor', properties: {name: "Al Pacino"})
+    john = quick_add_node(label: 'actor', properties: {name: "John Travolta"})
+
+    assert_equal(0, @graph.edges.size)
+
+    edge = Redgraph::Edge.new(type: 'FRIEND_OF', src: al, dest: john, properties: {since: 1990})
+    @graph.merge_edge(edge)
+    assert_equal(1, @graph.edges.size)
+
+    @graph.merge_edge(edge)
+    assert_equal(1, @graph.edges.size)
   end
 end

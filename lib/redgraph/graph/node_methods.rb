@@ -6,11 +6,14 @@ module Redgraph
       # Adds a node. If successul it returns the created object, otherwise false
       #
       def add_node(node)
-        result = _query("CREATE (n:`#{node.label}` #{quote_hash(node.properties)}) RETURN ID(n)")
-        return false if result.stats[:nodes_created] != 1
-        id = result.resultset.first["ID(n)"]
-        node.id = id
-        node
+        merge_or_add_node(node, :create)
+      end
+
+      # Merges (creates a node unless one with the same label and properties exists). If successul
+      # it returns the object, otherwise false
+      #
+      def merge_node(node)
+        merge_or_add_node(node, :merge)
       end
 
       def find_node_by_id(id)
@@ -83,6 +86,16 @@ module Redgraph
           node.id = node_id
         end
       end
+
+      def merge_or_add_node(node, verb = :create)
+        verb = verb == :create ? "CREATE" : "MERGE"
+        result = _query("#{verb} (n:`#{node.label}` #{quote_hash(node.properties)}) RETURN ID(n)")
+        return false if result.stats[:nodes_created] != 1
+        id = result.resultset.first["ID(n)"]
+        node.id = id
+        node
+      end
+
     end
   end
 end

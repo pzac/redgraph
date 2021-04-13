@@ -1,5 +1,6 @@
 ## [0.1.4]
 
+- add Graph#merge_node and Graph#merge_edge 
 - edge and node properties are now a HashWithIndifferentAccess
 
 ## [0.1.3] - 2021-04-13
