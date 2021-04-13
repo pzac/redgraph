@@ -10,8 +10,12 @@ module Redgraph
 
     attr_accessor :connection, :graph_name
 
-    def initialize(graph, redis_options = {})
-      @graph_name = graph
+    # @example Graph.new("foobar", url: "redis://localhost:6379/0", logger: Logger.new(STDOUT))
+    # @param graph_name [String] Name of the graph
+    # @param redis_options [Hash] Redis client options
+    #
+    def initialize(graph_name, redis_options = {})
+      @graph_name = graph_name
       @connection = Redis.new(redis_options)
       @module_version = module_version
       raise ServerError unless @module_version
@@ -35,27 +39,27 @@ module Redgraph
       raise e
     end
 
-    # Returns an array of existing graphs
+    # @return [Array] Existing graph names
     #
     def list
       @connection.call("GRAPH.LIST")
     end
 
-    # Returns an array of existing labels
+    # @return [Array] Existing labels
     #
     def labels
       result = _query("CALL db.labels()")
       result.resultset.map(&:values).flatten
     end
 
-    # Returns an array of existing properties
+    # @return [Array] Existing properties
     #
     def properties
       result = _query("CALL db.propertyKeys()")
       result.resultset.map(&:values).flatten
     end
 
-    # Returns an array of existing relationship types
+    # @return [Array] Existing relationship types
     #
     def relationship_types
       result = _query("CALL db.relationshipTypes()")
@@ -67,16 +71,25 @@ module Redgraph
       _query(cmd).rows
     end
 
+    # @param id [Integer] label id
+    # @return [String, nil] label
+    #
     def get_label(id)
       @labels ||= labels
       @labels[id] || (@labels = labels)[id]
     end
 
+    # @param id [Integer] property id
+    # @return [String, nil] property
+    #
     def get_property(id)
       @properties ||= properties
       @properties[id] || (@properties = properties)[id]
     end
 
+    # @param id [Integer] relationship type id
+    # @return [String, nil] relationship type
+    #
     def get_relationship_type(id)
       @relationship_types ||= relationship_types
       @relationship_types[id] || (@relationship_types = relationship_types)[id]
