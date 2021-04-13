@@ -19,3 +19,15 @@ unless $REDIS_URL = ENV['TEST_REDIS_URL']
   puts "To run the tests you need to define the TEST_REDIS_URL environment variable"
   exit(1)
 end
+
+module TestHelpers
+  private
+
+  def quick_add_node(label:, properties:)
+    @graph.add_node(Redgraph::Node.new(label: label, properties: properties))
+  end
+
+  def quick_add_edge(type:, src:, dest:, properties:)
+    @graph.add_edge(Redgraph::Edge.new(type: type, src: src, dest: dest, properties: properties))
+  end
+end

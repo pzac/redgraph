@@ -3,6 +3,8 @@
 require "test_helper"
 
 class GraphNodeMethodsTest < Minitest::Test
+  include TestHelpers
+
   def setup
     @graph = Redgraph::Graph.new("movies", url: $REDIS_URL)
 
@@ -106,11 +108,5 @@ class GraphNodeMethodsTest < Minitest::Test
     items = @graph.nodes(label: 'token', limit: 3, skip: 3)
     assert_equal(3, items.size)
     assert_equal([3,4,5], items.map{|item| item.properties["number"]})
-  end
-
-  private
-
-  def quick_add_node(label:, properties:)
-    @graph.add_node(Redgraph::Node.new(label: label, properties: properties))
   end
 end

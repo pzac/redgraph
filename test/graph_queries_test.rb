@@ -3,6 +3,8 @@
 require "test_helper"
 
 class GraphQueriesTest < Minitest::Test
+  include TestHelpers
+
   def setup
     @graph = Redgraph::Graph.new("movies", url: $REDIS_URL)
 
@@ -39,15 +41,5 @@ class GraphQueriesTest < Minitest::Test
     edge = quick_add_edge(type: 'FRIEND_OF', src: @al, dest: @john, properties: {since: 1980})
     result = @graph.query("MATCH (src)-[edge:FRIEND_OF]->(dest) RETURN src, edge")
     assert_equal([[@al, edge]], result)
-  end
-
-  private
-
-  def quick_add_node(label:, properties:)
-    @graph.add_node(Redgraph::Node.new(label: label, properties: properties))
-  end
-
-  def quick_add_edge(type:, src:, dest:, properties:)
-    @graph.add_edge(Redgraph::Edge.new(type: type, src: src, dest: dest, properties: properties))
   end
 end

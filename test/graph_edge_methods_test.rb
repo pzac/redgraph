@@ -3,6 +3,8 @@
 require "test_helper"
 
 class GraphEdgeMethodsTest < Minitest::Test
+  include TestHelpers
+
   def setup
     @graph = Redgraph::Graph.new("movies", url: $REDIS_URL)
 
@@ -86,15 +88,5 @@ class GraphEdgeMethodsTest < Minitest::Test
 
     edges = @graph.edges(type: 'FRIEND_OF', order: "edge.since DESC")
     assert_equal([e2, e3, e1], edges)
-  end
-
-  private
-
-  def quick_add_node(label:, properties:)
-    @graph.add_node(Redgraph::Node.new(label: label, properties: properties))
-  end
-
-  def quick_add_edge(type:, src:, dest:, properties:)
-    @graph.add_edge(Redgraph::Edge.new(type: type, src: src, dest: dest, properties: properties))
   end
 end
