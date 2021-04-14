@@ -27,8 +27,6 @@ module Redgraph
       # - skip
       #
       def edges(type: nil, src: nil, dest: nil, properties: nil, order: nil, limit: nil, skip: nil)
-        _type = ":`#{type}`" if type
-        _props = quote_hash(properties) if properties
         _order = if order
           raise MissingAliasPrefixError unless order.include?("edge.")
           "ORDER BY #{order}"
@@ -44,7 +42,9 @@ module Redgraph
           "WHERE #{clauses}"
         end
 
-        cmd = "MATCH (src)-[edge#{_type} #{_props}]->(dest) #{_where}
+        edge = Edge.new(type: type, src: src, dest: dest, properties: properties)
+
+        cmd = "MATCH #{edge.to_query_string} #{_where}
                RETURN src, edge, dest #{_order} #{_skip} #{_limit}"
         result = _query(cmd)
 
@@ -81,9 +81,9 @@ module Redgraph
         verb = verb == :create ? "CREATE" : "MERGE"
         result = _query("MATCH (src), (dest)
                         WHERE ID(src) = #{edge.src.id} AND ID(dest) = #{edge.dest.id}
-                        #{verb} (src)-[e:`#{edge.type}` #{quote_hash(edge.properties)}]->(dest) RETURN ID(e)")
+                        #{verb} #{edge.to_query_string} RETURN ID(edge)")
         return false if result.stats[:relationships_created] != 1
-        id = result.resultset.first["ID(e)"]
+        id = result.resultset.first["ID(edge)"]
         edge.id = id
         edge
       end

@@ -41,7 +41,6 @@ module Redgraph
       #
       def nodes(label: nil, properties: nil, order: nil, limit: nil, skip: nil)
         _label = ":`#{label}`" if label
-        _props = quote_hash(properties) if properties
         _order = if order
           raise MissingAliasPrefixError unless order.include?("node.")
           "ORDER BY #{order}"
@@ -49,7 +48,9 @@ module Redgraph
         _limit = "LIMIT #{limit}" if limit
         _skip = "SKIP #{skip}" if skip
 
-        cmd = "MATCH (node#{_label} #{_props}) RETURN node #{_order} #{_skip} #{_limit}"
+        node = Node.new(label: label, properties: properties)
+
+        cmd = "MATCH #{node.to_query_string} RETURN node #{_order} #{_skip} #{_limit}"
 
         result = _query(cmd)
 
@@ -64,10 +65,9 @@ module Redgraph
       # - properties: filter by properties
       #
       def count_nodes(label: nil, properties: nil)
-        _label = ":`#{label}`" if label
-        _props = quote_hash(properties) if properties
+        node = Node.new(label: label, properties: properties)
 
-        cmd = "MATCH (node#{_label} #{_props}) RETURN COUNT(node)"
+        cmd = "MATCH #{node.to_query_string} RETURN COUNT(node)"
         query(cmd).flatten[0]
       end
 
@@ -89,9 +89,9 @@ module Redgraph
 
       def merge_or_add_node(node, verb = :create)
         verb = verb == :create ? "CREATE" : "MERGE"
-        result = _query("#{verb} (n:`#{node.label}` #{quote_hash(node.properties)}) RETURN ID(n)")
+        result = _query("#{verb} #{node.to_query_string} RETURN ID(node)")
         return false if result.stats[:nodes_created] != 1
-        id = result.resultset.first["ID(n)"]
+        id = result.resultset.first["ID(node)"]
         node.id = id
         node
       end

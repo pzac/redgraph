@@ -101,21 +101,5 @@ module Redgraph
       data = @connection.call("GRAPH.QUERY", graph_name, cmd, "--compact")
       QueryResponse.new(data, self)
     end
-
-    def quote_hash(hash)
-      "{" +
-      hash.map {|k,v| "#{k}:#{escape_value(v)}" }.join(", ") +
-      "}"
-    end
-
-    def escape_value(x)
-      case x
-      when Integer then x
-      when NilClass then "''"
-      else
-        '"' + x.gsub('"', '\"') + '"'
-      end
-    end
-
   end
 end
