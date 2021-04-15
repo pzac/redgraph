@@ -60,6 +60,19 @@ module Redgraph
         end
       end
 
+      # Counts edges. Options:
+      #
+      # - type: filter by type
+      # - properties: filter by properties
+      #
+      def count_edges(type: nil, properties: nil)
+        edge = Edge.new(type: type, properties: properties)
+
+        cmd = "MATCH #{edge.to_query_string} RETURN COUNT(edge)"
+        query(cmd).flatten[0]
+      end
+
+
       private
 
       def edge_from_resultset_item(item)

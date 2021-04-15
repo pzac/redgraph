@@ -36,6 +36,15 @@ class GraphEdgeMethodsTest < Minitest::Test
     assert_equal(2, edges.size)
   end
 
+  def test_count_edges
+    marlon = quick_add_node(label: 'actor', properties: {name: "Marlon Brando"})
+    film = quick_add_node(label: 'film', properties: {name: "The Godfather"})
+    quick_add_edge(type: 'ACTOR_IN', src: marlon, dest: film, properties: {role: 'Don Vito'})
+    quick_add_edge(type: 'ACTOR_IN', src: @al,    dest: film, properties: {role: 'Michael'})
+
+    assert_equal(2, @graph.count_edges)
+  end
+
   def test_filter_edges
     marlon = quick_add_node(label: 'actor', properties: {name: "Marlon Brando"})
     film = quick_add_node(label: 'film', properties: {name: "The Godfather"})
