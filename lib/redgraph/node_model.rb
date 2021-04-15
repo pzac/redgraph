@@ -54,7 +54,7 @@ module Redgraph
       def all(properties: nil, limit: nil, skip: nil, order: nil)
         graph.nodes(label: label, properties: properties,
                     limit: limit, skip: skip, order: nil).map do |node|
-          new(id: node.id, **node.properties)
+          reify_from_node(node)
         end
       end
 
@@ -71,7 +71,7 @@ module Redgraph
       def find(id)
         node = graph.find_node_by_id(id)
         return unless node
-        new(id: node.id, **node.properties)
+        reify_from_node(node)
       end
 
       # Sets the label for this class of nodes. If missing it will be computed from the class name
@@ -83,6 +83,12 @@ module Redgraph
       #
       def label
         @label ||= default_label
+      end
+
+      # Converts a Node object into NodeModel
+      #
+      def reify_from_node(node)
+        new(id: node.id, **node.properties)
       end
 
       private
@@ -150,6 +156,12 @@ module Redgraph
 
     def to_node
       Redgraph::Node.new(id: id, label: label, properties: attributes.except(:id))
+    end
+
+    # Converts a Node object into NodeModel
+    #
+    def reify_from_node(node)
+      self.class.reify_from_node(node)
     end
 
     def ==(other)
