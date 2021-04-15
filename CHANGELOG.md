@@ -1,5 +1,6 @@
 ## [0.1.4]
 
+- add NodeModel mixin for a basic ActiveRecord-like syntax
 - add Graph#merge_node and Graph#merge_edge 
 - edge and node properties are now a HashWithIndifferentAccess
 

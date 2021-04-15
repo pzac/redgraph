@@ -90,7 +90,8 @@ module Redgraph
       def merge_or_add_node(node, verb = :create)
         verb = verb == :create ? "CREATE" : "MERGE"
         result = _query("#{verb} #{node.to_query_string} RETURN ID(node)")
-        return false if result.stats[:nodes_created] != 1
+        # Should we treat this case differently?
+        # return false if result.stats[:nodes_created] != 1
         id = result.resultset.first["ID(node)"]
         node.id = id
         node

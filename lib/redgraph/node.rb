@@ -6,7 +6,8 @@ module Redgraph
 
     attr_accessor :id, :label, :properties
 
-    def initialize(label: nil, properties: nil)
+    def initialize(label: nil, properties: nil, id: nil)
+      @id = id
       @label = label
       @properties = (properties || {}).with_indifferent_access
     end
