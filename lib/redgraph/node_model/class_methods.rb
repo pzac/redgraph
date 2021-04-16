@@ -34,6 +34,7 @@ module Redgraph
       # Sets the label for this class of nodes. If missing it will be computed from the class name
       def label=(x)
         @label = x
+        Registry.register_node_model(self)
       end
 
       # Current label

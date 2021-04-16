@@ -25,12 +25,37 @@ class NodeModelLabelsTest < Minitest::Test
     assert_equal("actor", Actor.label)
   end
 
+  def test_default_label_registration
+    assert_equal("Actor", Redgraph::NodeModel::Registry.class_name_for_label("actor"))
+  end
+
   class Artist
     include Redgraph::NodeModel
-    self.label = "person"
+    self.label = "_artist"
   end
 
   def test_custom_label
-    assert_equal("person", Artist.label)
+    assert_equal("_artist", Artist.label)
+  end
+
+  def test_custom_label_registration
+    assert_equal("Artist", Redgraph::NodeModel::Registry.class_name_for_label("_artist"))
+  end
+
+  class Painter < Artist
+  end
+
+  def test_default_label_when_inherited
+    assert_equal("painter", Painter.label)
+    assert_equal("Painter", Redgraph::NodeModel::Registry.class_name_for_label("painter"))
+  end
+
+  class Pianist < Artist
+    self.label = "pianist"
+  end
+
+  def test_custom_label_when_inherited
+    assert_equal("pianist", Pianist.label)
+    assert_equal("Pianist", Redgraph::NodeModel::Registry.class_name_for_label("pianist"))
   end
 end

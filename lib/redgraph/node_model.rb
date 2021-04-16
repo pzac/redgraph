@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require_relative 'node_model/class_methods'
+require_relative 'node_model/registry'
 
 module Redgraph
   # This mixin allows you to use an interface similar to ActiveRecord
@@ -17,10 +18,15 @@ module Redgraph
   # john = Actor.find(123)
   # total = Actor.count
   #
+  # When you include this module (or subclass a class with it) then the label-class registry is
+  # updated.
+  #
   module NodeModel
     extend ActiveSupport::Concern
 
-    included do
+    included do |base|
+      Registry.register_node_model(base)
+
       @attribute_names = [:id]
 
       attr_accessor :id
@@ -40,6 +46,7 @@ module Redgraph
           super
           subclass.instance_variable_set(:@attribute_names, @attribute_names.dup)
           subclass.instance_variable_set(:@graph, @graph.dup)
+          Registry.register_node_model(subclass)
         end
       end
     end
