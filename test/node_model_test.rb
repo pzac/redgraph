@@ -41,56 +41,6 @@ class NodeModelTest < Minitest::Test
     attribute :name
   end
 
-  def test_count
-    quick_add_node(label: 'actor', properties: {name: "Al Pacino"})
-    quick_add_node(label: 'actor', properties: {name: "John Travolta"})
-    assert_equal(2, Actor.count)
-    assert_equal(1, Actor.count(properties: {name: "Al Pacino"}))
-  end
-
-  def test_all
-    al = Actor.new(name: "Al Pacino").add_to_graph
-    john = Actor.new(name: "John Travolta").add_to_graph
-
-    items = Actor.all
-    assert_equal(2, items.size)
-    assert_includes(items, al)
-    assert_includes(items, john)
-
-    items = Actor.all(properties: {name: "Al Pacino"})
-    assert_equal(1, items.size)
-    assert_includes(items, al)
-  end
-
-  def test_find
-    al = quick_add_node(label: 'actor', properties: {name: "Al Pacino"})
-    item = Actor.find(al.id)
-
-    assert_equal(Actor, item.class)
-    assert_predicate(item, :persisted?)
-    assert_equal(al.id, item.id)
-    assert_equal("Al Pacino", item.name)
-  end
-
-  def test_find_bad_id
-    quick_add_node(label: 'actor', properties: {name: "Al Pacino"})
-    item = Actor.find("-1")
-    assert_nil(item)
-  end
-
-  def test_label
-    assert_equal("actor", Actor.label)
-  end
-
-  class Artist
-    include Redgraph::NodeModel
-    self.label = "person"
-  end
-
-  def test_custom_label
-    assert_equal("person", Artist.label)
-  end
-
   class Film
     include Redgraph::NodeModel
     self.graph = GRAPH
