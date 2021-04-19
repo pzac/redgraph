@@ -62,6 +62,10 @@ module Redgraph
         end
       end
 
+      def create(properties)
+        new(**properties).add_to_graph
+      end
+
       private
 
       def default_label

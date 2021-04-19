@@ -21,4 +21,9 @@ module Redgraph
       "The order clause requires the node/edge alias prefix, ie order('node.foo') instead order('foo')"
     end
   end
+  class MissingGraphError < Error
+    def message
+      "A graph to use is not defined"
+    end
+  end
 end

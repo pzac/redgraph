@@ -1,3 +1,7 @@
+## [0.2.1]
+
+- Add NodeModel.create method
+
 ## [0.2.0]
 
 - revamp the NodeModel mixin, the Node to model mapping is now handled by the `_type` property

@@ -86,6 +86,7 @@ module Redgraph
     #     not present
     #
     def add_to_graph(allow_duplicates: true)
+      raise MissingGraphError unless graph
       item = allow_duplicates ? graph.add_node(to_node) : graph.merge_node(to_node)
       self.id = item.id
       self

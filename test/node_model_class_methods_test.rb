@@ -24,6 +24,11 @@ class NodeModelClassMethodsTest < Minitest::Test
     attribute :name
   end
 
+  class MissingGraphActor
+    include Redgraph::NodeModel
+    attribute :name
+  end
+
   # tests
   #
 
@@ -62,5 +67,27 @@ class NodeModelClassMethodsTest < Minitest::Test
     quick_add_node(label: 'actor', properties: {name: "Al Pacino"})
     item = Actor.find("-1")
     assert_nil(item)
+  end
+
+  def test_create
+    assert_equal(0, Actor.count)
+
+    actor = Actor.create(name: "Harrison Ford")
+
+    assert_equal(1, Actor.count)
+    assert_predicate(actor, :persisted?)
+    assert_equal("Harrison Ford", actor.name)
+    assert_equal("actor", actor.label)
+
+    found = Actor.find(actor.id)
+    assert_equal("Harrison Ford", found.name)
+    assert_equal("actor", found.label)
+    assert_equal(Actor.name, found._type)
+  end
+
+  def test_create_with_missing_graph
+    assert_raises(Redgraph::MissingGraphError) do
+      MissingGraphActor.create(name: "Harrison Ford")
+    end
   end
 end

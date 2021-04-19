@@ -103,6 +103,7 @@ And this will give you stuff such as
     john = Actor.new(name: "John Travolta")
     john.add_to_graph # Will add the node to the graph
     john.add_relation(type: "ACTED_IN", node: film, properties: {role: "Tony Manero"})
+    Actor.create(name: "Al Pacino")
 
 `NodeModel` models will automatically set a `_type` property to keep track of the object class.
 
