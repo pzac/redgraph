@@ -15,18 +15,13 @@ class NodeModelLabelsTest < Minitest::Test
     @graph.delete
   end
 
+  # test classes
+  #
+
   class Actor
     include Redgraph::NodeModel
     self.graph = GRAPH
     attribute :name
-  end
-
-  def test_label
-    assert_equal("actor", Actor.label)
-  end
-
-  def test_default_label_registration
-    assert_equal("Actor", Redgraph::NodeModel::Registry.class_name_for_label("actor"))
   end
 
   class Artist
@@ -34,28 +29,29 @@ class NodeModelLabelsTest < Minitest::Test
     self.label = "_artist"
   end
 
-  def test_custom_label
-    assert_equal("_artist", Artist.label)
-  end
-
-  def test_custom_label_registration
-    assert_equal("Artist", Redgraph::NodeModel::Registry.class_name_for_label("_artist"))
-  end
-
   class Painter < Artist
-  end
-
-  def test_default_label_when_inherited
-    assert_equal("painter", Painter.label)
-    assert_equal("Painter", Redgraph::NodeModel::Registry.class_name_for_label("painter"))
   end
 
   class Pianist < Artist
     self.label = "pianist"
   end
 
+  # tests
+  #
+
+  def test_label
+    assert_equal("actor", Actor.label)
+  end
+
+  def test_custom_label
+    assert_equal("_artist", Artist.label)
+  end
+
+  def test_default_label_when_inherited
+    assert_equal("painter", Painter.label)
+  end
+
   def test_custom_label_when_inherited
     assert_equal("pianist", Pianist.label)
-    assert_equal("Pianist", Redgraph::NodeModel::Registry.class_name_for_label("pianist"))
   end
 end

@@ -1,3 +1,7 @@
+## [0.2.0]
+
+- revamp the NodeModel mixin, the Node to model mapping is now handled by the `_type` property
+
 ## [0.1.4]
 
 - add NodeModel mixin for a basic ActiveRecord-like syntax

@@ -68,7 +68,9 @@ module Redgraph
         node = Node.new(label: label, properties: properties)
 
         cmd = "MATCH #{node.to_query_string} RETURN COUNT(node)"
-        query(cmd).flatten[0]
+        # RedisGraph bug: if there are no matches COUNT returns zero rows
+        # https://github.com/RedisGraph/RedisGraph/issues/1455
+        query(cmd).flatten[0] || 0
       end
 
       private

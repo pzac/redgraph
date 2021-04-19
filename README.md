@@ -104,6 +104,14 @@ And this will give you stuff such as
     john.add_to_graph # Will add the node to the graph
     john.add_relation(type: "ACTED_IN", node: film, properties: {role: "Tony Manero"})
 
+`NodeModel` models will automatically set a `_type` property to keep track of the object class.
+
+You will then be able to run custom queries such as:
+
+    Actor.query("MATCH (node) RETURN node ORDER BY node.name")
+
+And the result rows object will be instances of the classes defined by the `_type` attribute.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run 

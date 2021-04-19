@@ -8,8 +8,8 @@ module Redgraph
       # - limit: number of items
       # - skip: items offset (useful for pagination)
       #
-      def all(properties: nil, limit: nil, skip: nil, order: nil)
-        graph.nodes(label: label, properties: properties,
+      def all(properties: {}, limit: nil, skip: nil, order: nil)
+        graph.nodes(label: label, properties: properties_plus_type(properties),
                     limit: limit, skip: skip, order: nil).map do |node|
           reify_from_node(node)
         end
@@ -20,7 +20,7 @@ module Redgraph
       # - properties: filter by properties
       #
       def count(properties: nil)
-        graph.count_nodes(label: label, properties: properties)
+        graph.count_nodes(label: label, properties: properties_plus_type(properties))
       end
 
       # Finds a node by id. Returns nil if not found
@@ -34,7 +34,6 @@ module Redgraph
       # Sets the label for this class of nodes. If missing it will be computed from the class name
       def label=(x)
         @label = x
-        Registry.register_node_model(self)
       end
 
       # Current label
@@ -46,13 +45,31 @@ module Redgraph
       # Converts a Node object into NodeModel
       #
       def reify_from_node(node)
-        new(id: node.id, **node.properties)
+        klass = node.properties[:_type].to_s.safe_constantize || self
+        klass.new(id: node.id, **node.properties)
+      end
+
+      # Runs a query on the graph, but converts the nodes to the corresponding ActiveModel class
+      # if available - otherwise they stay NodeObjects.
+      #
+      # Returns an array of rows.
+      #
+      def query(cmd)
+        graph.query(cmd).map do |row|
+          row.map do |item|
+            item.is_a?(Node) ? reify_from_node(item) : item
+          end
+        end
       end
 
       private
 
       def default_label
         name.demodulize.underscore
+      end
+
+      def properties_plus_type(properties = {})
+        {_type: name}.merge(properties || {})
       end
     end
   end

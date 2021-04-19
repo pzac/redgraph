@@ -15,15 +15,21 @@ class NodeModelClassMethodsTest < Minitest::Test
     @graph.delete
   end
 
+  # test classes
+  #
+
   class Actor
     include Redgraph::NodeModel
     self.graph = GRAPH
     attribute :name
   end
 
+  # tests
+  #
+
   def test_count
-    quick_add_node(label: 'actor', properties: {name: "Al Pacino"})
-    quick_add_node(label: 'actor', properties: {name: "John Travolta"})
+    quick_add_node(label: 'actor', properties: {_type: Actor.name, name: "Al Pacino"})
+    quick_add_node(label: 'actor', properties: {_type: Actor.name, name: "John Travolta"})
     assert_equal(2, Actor.count)
     assert_equal(1, Actor.count(properties: {name: "Al Pacino"}))
   end

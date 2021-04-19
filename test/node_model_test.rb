@@ -15,6 +15,9 @@ class NodeModelTest < Minitest::Test
     @graph.delete
   end
 
+  # test classes
+  #
+
   class Animal
     include Redgraph::NodeModel
     attribute :name
@@ -22,17 +25,6 @@ class NodeModelTest < Minitest::Test
   end
 
   class Dog < Animal
-  end
-
-  def test_graph_accessor
-    assert_equal("pippo", Animal.graph)
-    assert_equal("pippo", Animal.new.graph)
-  end
-
-  def test_class_inheritance
-    assert_equal("pippo", Dog.graph)
-    assert_equal("dog", Dog.label)
-    assert_equal([:id, :name], Dog.attribute_names)
   end
 
   class Actor
@@ -46,6 +38,20 @@ class NodeModelTest < Minitest::Test
     self.graph = GRAPH
     attribute :name
     attribute :year
+  end
+
+  # tests
+  #
+
+  def test_graph_accessor
+    assert_equal("pippo", Animal.graph)
+    assert_equal("pippo", Animal.new.graph)
+  end
+
+  def test_class_inheritance
+    assert_equal("pippo", Dog.graph)
+    assert_equal("dog", Dog.label)
+    assert_equal([:id, :name], Dog.attribute_names)
   end
 
   def test_attribute_names
@@ -105,6 +111,16 @@ class NodeModelTest < Minitest::Test
 
     actor.add_relation(type: "ACTED_IN", node: film, properties: {role: "Han Solo"}, allow_duplicates: false)
     assert_equal(2, @graph.count_edges)
+  end
+
+  def test_casting_query
+    Film.new(name: "Star Wars", year: 1977).add_to_graph
+    Actor.new(name: "Harrison Ford").add_to_graph
+
+    items = Film.query("MATCH (node) RETURN node ORDER BY node.name")
+    assert_equal(2, items.size)
+    assert_kind_of(Actor, items[0][0])
+    assert_kind_of(Film, items[1][0])
   end
 
 end
