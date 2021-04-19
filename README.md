@@ -2,6 +2,10 @@
 
 A simple RedisGraph library. This gem owes **a lot** to the existing [redisgraph-rb](https://github.com/RedisGraph/redisgraph-rb) gem, but tries to provide a friendlier interface, similar to the existing [Python](https://github.com/RedisGraph/redisgraph-py) and [Elixir](https://github.com/crflynn/redisgraph-ex) clients.
 
+### Code Status
+
+[![Gem Version](https://badge.fury.io/rb/redgraph.svg)](https://badge.fury.io/rb/redgraph)
+
 ## Installation
 
 Add this line to your application's Gemfile:
