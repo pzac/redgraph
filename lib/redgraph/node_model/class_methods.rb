@@ -56,6 +56,8 @@ module Redgraph
       # Returns an array of rows.
       #
       def query(cmd)
+        raise MissingGraphError unless graph
+
         graph.query(cmd).map do |row|
           row.map do |item|
             item.is_a?(Node) ? reify_from_node(item) : item

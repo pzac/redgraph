@@ -123,4 +123,14 @@ class NodeModelTest < Minitest::Test
     assert_kind_of(Film, items[1][0])
   end
 
+  def test_casting_query_from_model
+    film = Film.create(name: "Star Wars", year: 1977)
+    Actor.create(name: "Harrison Ford")
+
+    items = film.query("MATCH (node) RETURN node ORDER BY node.name")
+    assert_equal(2, items.size)
+    assert_kind_of(Actor, items[0][0])
+    assert_kind_of(Film, items[1][0])
+  end
+
 end
