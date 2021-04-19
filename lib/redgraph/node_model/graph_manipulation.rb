@@ -26,6 +26,17 @@ module Redgraph
         allow_duplicates ? graph.add_edge(edge) : graph.merge_edge(edge)
       end
 
+      # Creates a new record or updates the existing
+      #
+      def save
+        if persisted?
+          item = graph.update_node(to_node)
+          self.class.reify_from_node(item)
+        else
+          add_to_graph
+        end
+      end
+
       # Runs a custom query on the graph
       #
       def query(cmd)

@@ -7,6 +7,7 @@ module Redgraph
   class Graph
     include NodeMethods
     include EdgeMethods
+    include Util
 
     attr_accessor :connection, :graph_name
 

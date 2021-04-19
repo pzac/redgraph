@@ -73,6 +73,17 @@ module Redgraph
         query(cmd).flatten[0] || 0
       end
 
+      def update_node(node)
+        return false unless node.persisted?
+        _set = node.properties.map do |(key, val)|
+          "node.#{key} = #{escape_value(val)}"
+        end.join(", ")
+
+        cmd = "MATCH (node) WHERE ID(node) = #{node.id} SET #{_set} RETURN node"
+        result = _query(cmd)
+        node_from_resultset_item(result.resultset.first["node"])
+      end
+
       private
 
       # Builds a Node object from the raw data
@@ -98,6 +109,7 @@ module Redgraph
         node.id = id
         node
       end
+
 
     end
   end

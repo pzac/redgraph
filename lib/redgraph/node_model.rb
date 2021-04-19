@@ -36,7 +36,7 @@ module Redgraph
 
         def attribute(name)
           @attribute_names << name
-          attr_reader(name)
+          attr_accessor(name)
         end
 
         private
