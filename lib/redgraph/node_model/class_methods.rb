@@ -3,12 +3,13 @@ module Redgraph
     module ClassMethods
       # Returns an array of nodes. Options:
       #
+      # - label: filter by label
       # - properties: filter by properties
       # - order: node.name ASC, node.year DESC
       # - limit: number of items
       # - skip: items offset (useful for pagination)
       #
-      def all(properties: {}, limit: nil, skip: nil, order: nil)
+      def all(label: nil, properties: {}, limit: nil, skip: nil, order: nil)
         graph.nodes(label: label, properties: properties_plus_type(properties),
                     limit: limit, skip: skip, order: nil).map do |node|
           reify_from_node(node)
@@ -19,7 +20,7 @@ module Redgraph
       #
       # - properties: filter by properties
       #
-      def count(properties: nil)
+      def count(label: nil, properties: nil)
         graph.count_nodes(label: label, properties: properties_plus_type(properties))
       end
 
