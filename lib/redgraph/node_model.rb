@@ -26,8 +26,7 @@ module Redgraph
     included do |base|
       @attribute_names = [:id]
 
-      attr_accessor :id
-      attr_accessor :_type
+      attr_accessor :id, :_type
 
       class << self
         attr_reader :attribute_names
@@ -108,12 +107,6 @@ module Redgraph
     def to_node
       props = attributes.except(:id).merge(_type: self.class.name)
       Redgraph::Node.new(id: id, label: label, properties: props)
-    end
-
-    # Converts a Node object into NodeModel
-    #
-    def reify_from_node(node)
-      self.class.reify_from_node(node)
     end
 
     def ==(other)
