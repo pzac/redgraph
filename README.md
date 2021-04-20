@@ -1,10 +1,9 @@
 # Redgraph
 
-A simple RedisGraph library. This gem owes **a lot** to the existing [redisgraph-rb](https://github.com/RedisGraph/redisgraph-rb) gem, but tries to provide a friendlier interface, similar to the existing [Python](https://github.com/RedisGraph/redisgraph-py) and [Elixir](https://github.com/crflynn/redisgraph-ex) clients.
-
-### Code Status
-
 [![Gem Version](https://badge.fury.io/rb/redgraph.svg)](https://badge.fury.io/rb/redgraph)
+[![Code Climate](https://codeclimate.com/github/pzac/redgraph.svg)](https://codeclimate.com/github/pzac/redgraph)
+
+A simple RedisGraph library. This gem owes **a lot** to the existing [redisgraph-rb](https://github.com/RedisGraph/redisgraph-rb) gem, but tries to provide a friendlier interface, similar to the existing [Python](https://github.com/RedisGraph/redisgraph-py) and [Elixir](https://github.com/crflynn/redisgraph-ex) clients.
 
 ## Installation
 
@@ -28,68 +27,90 @@ The gem assumes you have a recent version of [RedisGraph](https://oss.redislabs.
 
 Basic usage:
 
-    graph = Redgraph::Graph.new('movies', url: "redis://localhost:6379/1")
-    => #<Redgraph::Graph:0x00007f8d5c2b7e38 @connection=#<Redis client v4.2.5 for redis://localhost:6379/1>, @graph_name="movies", @module_version=999999>
+```ruby
+graph = Redgraph::Graph.new('movies', url: "redis://localhost:6379/1")
+=> #<Redgraph::Graph:0x00007f8d5c2b7e38 @connection=#<Redis client v4.2.5 for redis://localhost:6379/1>, @graph_name="movies", @module_version=999999>
+```
 
 Create a couple nodes:
 
-    actor = Redgraph::Node.new(label: 'actor', properties: {name: "Al Pacino"})
-    => #<Redgraph::Node:0x00007f8d5f95cf88 @label="actor", @properties={:name=>"Al Pacino"}>
-    graph.add_node(actor)
-    => #<Redgraph::Node:0x00007f8d5f95cf88 @id=0, @label="actor", @properties={:name=>"Al Pacino"}>
-    film = Redgraph::Node.new(label: 'film', properties: {name: "Scarface"})
-    => #<Redgraph::Node:0x00007f8d5f85ccc8 @label="film", @properties={:name=>"Scarface"}>
-    graph.add_node(film)
-    => #<Redgraph::Node:0x00007f8d5f85ccc8 @id=1, @label="film", @properties={:name=>"Scarface"}>
+```ruby
+actor = Redgraph::Node.new(label: 'actor', properties: {name: "Al Pacino"})
+=> #<Redgraph::Node:0x00007f8d5f95cf88 @label="actor", @properties={:name=>"Al Pacino"}>
+graph.add_node(actor)
+=> #<Redgraph::Node:0x00007f8d5f95cf88 @id=0, @label="actor", @properties={:name=>"Al Pacino"}>
+film = Redgraph::Node.new(label: 'film', properties: {name: "Scarface"})
+=> #<Redgraph::Node:0x00007f8d5f85ccc8 @label="film", @properties={:name=>"Scarface"}>
+graph.add_node(film)
+=> #<Redgraph::Node:0x00007f8d5f85ccc8 @id=1, @label="film", @properties={:name=>"Scarface"}>
+```
 
 Create an edge between those nodes:
 
-    edge = Redgraph::Edge.new(src: actor, dest: film, type: 'ACTOR_IN', properties: {role: "Tony Montana"})
-    => #<Redgraph::Edge:0x00007f8d5f9ae3d8 @dest=#<Redgraph::Node:0x00007f8d5f85ccc8 @id=1, @label="film", @properties={:name=>"Scarface"}>, @dest_id=1, @properties={:role=>"Tony Montana"}, @src=#<Redgraph::Node:0x00007f8d5f95cf88 @id=0, @label="actor", @properties={:name=>"Al Pacino"}>, @src_id=0, @type="ACTOR_IN">
-    @graph.add_edge(edge)
-    => #<Redgraph::Edge:0x00007f8d5f9ae3d8 @dest=#<Redgraph::Node:0x00007f8d5f85ccc8 @id=1, @label="film", @properties={:name=>"Scarface"}>, @dest_id=1, @id=0, @properties={:role=>"Tony Montana"}, @src=#<Redgraph::Node:0x00007f8d5f95cf88 @id=0, @label="actor", @properties={:name=>"Al Pacino"}>, @src_id=0, @type="ACTOR_IN">
+```ruby
+edge = Redgraph::Edge.new(src: actor, dest: film, type: 'ACTOR_IN', properties: {role: "Tony Montana"})
+=> #<Redgraph::Edge:0x00007f8d5f9ae3d8 @dest=#<Redgraph::Node:0x00007f8d5f85ccc8 @id=1, @label="film", @properties={:name=>"Scarface"}>, @dest_id=1, @properties={:role=>"Tony Montana"}, @src=#<Redgraph::Node:0x00007f8d5f95cf88 @id=0, @label="actor", @properties={:name=>"Al Pacino"}>, @src_id=0, @type="ACTOR_IN">
+@graph.add_edge(edge)
+=> #<Redgraph::Edge:0x00007f8d5f9ae3d8 @dest=#<Redgraph::Node:0x00007f8d5f85ccc8 @id=1, @label="film", @properties={:name=>"Scarface"}>, @dest_id=1, @id=0, @properties={:role=>"Tony Montana"}, @src=#<Redgraph::Node:0x00007f8d5f95cf88 @id=0, @label="actor", @properties={:name=>"Al Pacino"}>, @src_id=0, @type="ACTOR_IN">
+```
 
 You can merge nodes - the node will be created only if there isn't another with the same label and properties:
 
-    graph.merge_node(film)
-    => #<Redgraph::Node:0x00007f8d5f85ccc8 @id=1, @label="film", @properties={:name=>"Scarface"}>
+```ruby
+graph.merge_node(film)
+=> #<Redgraph::Node:0x00007f8d5f85ccc8 @id=1, @label="film", @properties={:name=>"Scarface"}>
+```
 
 Same with edges:
 
-    @graph.merge_edge(edge)
-    => #<Redgraph::Edge:0x00007f8d5f9ae3d8 @dest=#<Redgraph::Node:0x00007f8d5f85ccc8 @id=1, @label="film", @properties={:name=>"Scarface"}>, @dest_id=1, @id=0, @properties={:role=>"Tony Montana"}, @src=#<Redgraph::Node:0x00007f8d5f95cf88 @id=0, @label="actor", @properties={:name=>"Al Pacino"}>, @src_id=0, @type="ACTOR_IN">
+```ruby
+@graph.merge_edge(edge)
+=> #<Redgraph::Edge:0x00007f8d5f9ae3d8 @dest=#<Redgraph::Node:0x00007f8d5f85ccc8 @id=1, @label="film", @properties={:name=>"Scarface"}>, @dest_id=1, @id=0, @properties={:role=>"Tony Montana"}, @src=#<Redgraph::Node:0x00007f8d5f95cf88 @id=0, @label="actor", @properties={:name=>"Al Pacino"}>, @src_id=0, @type="ACTOR_IN">
+```
 
 Find a node by id:
 
-    @graph.find_node_by_id(1)
-    => #<Redgraph::Node:0x00007f8d5c2c6e88 @id=1, @label="film", @properties={"name"=>"Scarface"}>
+```ruby
+@graph.find_node_by_id(1)
+=> #<Redgraph::Node:0x00007f8d5c2c6e88 @id=1, @label="film", @properties={"name"=>"Scarface"}>
+```
 
 To get all nodes:
 
-    @graph.nodes
-    => [#<Redgraph::Node:0x00007f8d5c2ee0a0 @id=0, @label="actor", @properties={"name"=>"Al Pacino"}>, #<Redgraph::Node:0x00007f8d5c2edfd8 @id=1, @label="film", @properties={"name"=>"Scarface"}>]
+```ruby
+@graph.nodes
+=> [#<Redgraph::Node:0x00007f8d5c2ee0a0 @id=0, @label="actor", @properties={"name"=>"Al Pacino"}>, #<Redgraph::Node:0x00007f8d5c2edfd8 @id=1, @label="film", @properties={"name"=>"Scarface"}>]
+```
 
 Optional filters that can be combined:
 
-    @graph.nodes(label: 'actor')
-    @graph.nodes(properties: {name: "Al Pacino"})
-    @graph.nodes(limit: 10, skip: 20)
+```ruby
+@graph.nodes(label: 'actor')
+@graph.nodes(properties: {name: "Al Pacino"})
+@graph.nodes(limit: 10, skip: 20)
+```
 
 Counting nodes
 
-    @graph.count_nodes(label: 'actor')
-    => 1
+```ruby
+@graph.count_nodes(label: 'actor')
+=> 1
+```
 
 Getting edges:
 
-    @graph.edges
-    @graph.edges(src: actor, dest: film)
-    @graph.edges(kind: 'FRIEND_OF', limit: 10, skip: 20)
-    @graph.count_edges
+```ruby
+@graph.edges
+@graph.edges(src: actor, dest: film)
+@graph.edges(kind: 'FRIEND_OF', limit: 10, skip: 20)
+@graph.count_edges
+```
 
 Running custom queries
 
-    @graph.query("MATCH (src)-[edge:FRIEND_OF]->(dest) RETURN src, edge")
+```ruby
+@graph.query("MATCH (src)-[edge:FRIEND_OF]->(dest) RETURN src, edge")
+```
 
 ### NodeModel
 
@@ -118,8 +139,9 @@ Actor.create(name: "Al Pacino")
 
 You will then be able to run custom queries such as:
 
-    Actor.query("MATCH (node) RETURN node ORDER BY node.name")
-
+```ruby
+Actor.query("MATCH (node) RETURN node ORDER BY node.name")
+```
 And the result rows object will be instances of the classes defined by the `_type` attribute.
 
 ## Development
