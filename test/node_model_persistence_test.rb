@@ -46,4 +46,17 @@ class NodeModelPersistenceTest < Minitest::Test
     item = Film.find(film.id)
     assert_equal("Commando", item.name)
   end
+
+  def test_reload
+    film = Film.create(name: "Star Wars")
+    copy = Film.find(film.id)
+
+    assert_equal("Star Wars", copy.name)
+
+    film.name = "Commando"
+    film.save
+
+    assert_equal("Star Wars", copy.name)
+    assert_equal("Commando", copy.reload.name)
+  end
 end

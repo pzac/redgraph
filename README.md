@@ -95,19 +95,24 @@ Running custom queries
 
 You can use the `NodeModel` mixin for a limited ActiveRecord-like interface:
 
-    class Actor
-      include Redgraph::NodeModel
-      self.graph = Redgraph::Graph.new("movies", url: $REDIS_URL)
-      attribute :name
-    end
+```ruby
+class Actor
+  include Redgraph::NodeModel
+  self.graph = Redgraph::Graph.new("movies", url: $REDIS_URL)
+  attribute :name
+end
+```
 
 And this will give you stuff such as
 
-    Actor.count
-    john = Actor.new(name: "John Travolta")
-    john.add_to_graph # Will add the node to the graph
-    john.add_relation(type: "ACTED_IN", node: film, properties: {role: "Tony Manero"})
-    Actor.create(name: "Al Pacino")
+```ruby
+Actor.count
+john = Actor.new(name: "John Travolta")
+john.add_to_graph # Will add the node to the graph
+john.add_relation(type: "ACTED_IN", node: film, properties: {role: "Tony Manero"})
+john.reload
+Actor.create(name: "Al Pacino")
+```
 
 `NodeModel` models will automatically set a `_type` property to keep track of the object class.
 

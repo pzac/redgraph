@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require_relative 'node_model/class_methods'
 require_relative 'node_model/graph_manipulation'
+require_relative 'node_model/persistence'
 
 module Redgraph
   # This mixin allows you to use an interface similar to ActiveRecord
@@ -25,7 +26,9 @@ module Redgraph
     extend ActiveSupport::Concern
 
     included do |base|
+      include Persistence
       include GraphManipulation
+
       @attribute_names = [:id]
 
       attr_accessor :id, :_type
@@ -77,8 +80,10 @@ module Redgraph
       self.class.attribute_names.to_h { |name| [name, public_send(name)] }
     end
 
-    def persisted?
-      id.present?
+    def assign_attributes(attrs = {})
+      attrs.each do |name, value|
+        instance_variable_set("@#{name}", value)
+      end
     end
 
     def to_node
