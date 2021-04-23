@@ -29,9 +29,16 @@ module Redgraph
       @response = response
       @graph = graph
 
-      @header_row = @response[0]
-      @result_rows = @response[1]
-      @query_statistics = @response[2]
+      case @response.size
+      when 3
+        @header_row = @response[0]
+        @result_rows = @response[1]
+        @query_statistics = @response[2]
+      when 1 # queries with no RETURN clause
+        @header_row = []
+        @result_rows = []
+        @query_statistics = @response[0]
+      end
     end
 
     def stats
@@ -121,6 +128,8 @@ module Redgraph
         case label
         when /^Nodes created/
           stats[:nodes_created] = value.to_i
+        when /^Nodes deleted/
+          stats[:nodes_deleted] = value.to_i
         when /^Relationships created/
           stats[:relationships_created] = value.to_i
         when /^Properties set/

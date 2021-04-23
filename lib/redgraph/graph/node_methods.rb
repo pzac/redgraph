@@ -84,6 +84,13 @@ module Redgraph
         node_from_resultset_item(result.resultset.first["node"])
       end
 
+      def destroy_node(node)
+        return false unless node.persisted?
+        cmd = "MATCH (node) WHERE ID(node) = #{node.id} DELETE node"
+        result = _query(cmd)
+        result.stats["nodes_deleted"] == 1
+      end
+
       private
 
       # Builds a Node object from the raw data

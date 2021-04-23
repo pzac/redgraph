@@ -1,5 +1,6 @@
 ## [0.2.1]
 
+- Add NodeModel#destroy method
 - Add NodeModel.create method
 
 ## [0.2.0]

@@ -34,6 +34,23 @@ module Redgraph
         assign_attributes(item.attributes)
         self
       end
+
+      # Deletes the record from the graph
+      #
+      def destroy
+        @destroyed = true
+        if graph.destroy_node(self)
+          self
+        else
+          false
+        end
+      end
+
+      # Returns true if this object has been destroyed, otherwise returns false.
+      #
+      def destroyed?
+        !!@destroyed
+      end
     end
   end
 end

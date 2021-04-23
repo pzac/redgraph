@@ -132,6 +132,7 @@ john = Actor.new(name: "John Travolta")
 john.add_to_graph # Will add the node to the graph
 john.add_relation(type: "ACTED_IN", node: film, properties: {role: "Tony Manero"})
 john.reload
+john.destroy
 Actor.create(name: "Al Pacino")
 ```
 

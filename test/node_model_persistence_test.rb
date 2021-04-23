@@ -59,4 +59,12 @@ class NodeModelPersistenceTest < Minitest::Test
     assert_equal("Star Wars", copy.name)
     assert_equal("Commando", copy.reload.name)
   end
+
+  def test_destroy
+    film = Film.create(name: "Star Wars")
+    assert_equal(1, Film.count)
+    film.destroy
+    assert_predicate(film, :destroyed?)
+    assert_equal(0, Film.count)
+  end
 end
