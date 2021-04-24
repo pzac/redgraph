@@ -36,13 +36,20 @@ Create a couple nodes:
 
 ```ruby
 actor = Redgraph::Node.new(label: 'actor', properties: {name: "Al Pacino"})
-=> #<Redgraph::Node:0x00007f8d5f95cf88 @label="actor", @properties={:name=>"Al Pacino"}>
+=> #<Redgraph::Node:0x00007fce3baa0580 @id=nil, @labels=["actor"], @properties={"name"=>"Al Pacino"}>
 graph.add_node(actor)
-=> #<Redgraph::Node:0x00007f8d5f95cf88 @id=0, @label="actor", @properties={:name=>"Al Pacino"}>
+=> #<Redgraph::Node:0x00007fce3baa0580 @id=0, @labels=["actor"], @properties={"name"=>"Al Pacino"}>
 film = Redgraph::Node.new(label: 'film', properties: {name: "Scarface"})
-=> #<Redgraph::Node:0x00007f8d5f85ccc8 @label="film", @properties={:name=>"Scarface"}>
+=> #<Redgraph::Node:0x00007fce3e8c6c48 @id=nil, @labels=["film"], @properties={"name"=>"Scarface"}>
 graph.add_node(film)
-=> #<Redgraph::Node:0x00007f8d5f85ccc8 @id=1, @label="film", @properties={:name=>"Scarface"}>
+=> #<Redgraph::Node:0x00007fce3e8c6c48 @id=1, @labels=["film"], @properties={"name"=>"Scarface"}>
+```
+
+Nodes might have multiple labels, although they're not supported by RedisGraph yet:
+
+```ruby
+item = Redgraph::Node.new(labels: ['film', 'drama'], properties: {name: "Casino"})
+=> #<Redgraph::Node:0x00007fce3bc73308 @id=nil, @labels=["film", "drama"], @properties={"name"=>"Casino"}>
 ```
 
 Create an edge between those nodes:

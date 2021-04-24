@@ -1,3 +1,5 @@
+- Nodes allow multiple labels
+
 ## [0.2.1]
 
 - Add NodeModel#destroy method

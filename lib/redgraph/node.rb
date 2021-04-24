@@ -4,12 +4,17 @@ module Redgraph
   class Node
     include Util
 
-    attr_accessor :id, :label, :properties
+    attr_accessor :id, :labels, :properties
 
-    def initialize(label: nil, properties: nil, id: nil)
+    def initialize(label: nil, properties: nil, id: nil, labels: nil)
       @id = id
-      @label = label
+      raise(Error, "You can either define a single label or a label array") if label && labels
+      @labels = labels || (label ? [label] : [])
       @properties = (properties || {}).with_indifferent_access
+    end
+
+    def label
+      labels.first
     end
 
     def persisted?
@@ -21,7 +26,7 @@ module Redgraph
     end
 
     def to_query_string(item_alias: 'node')
-      _label = ":#{label}" if label
+      _label = labels.map {|l| ":`#{l}`"}.join
       "(#{item_alias}#{_label} #{properties_to_string(properties)})"
     end
   end
