@@ -45,7 +45,7 @@ graph.add_node(film)
 => #<Redgraph::Node:0x00007fce3e8c6c48 @id=1, @labels=["film"], @properties={"name"=>"Scarface"}>
 ```
 
-Nodes might have multiple labels, although they're not supported by RedisGraph yet:
+Nodes might have multiple labels, although they're not supported by RedisGraph yet (you can track the feature progress [here](https://github.com/RedisGraph/RedisGraph/pull/1561)):
 
 ```ruby
 item = Redgraph::Node.new(labels: ['film', 'drama'], properties: {name: "Casino"})
@@ -57,7 +57,7 @@ Create an edge between those nodes:
 ```ruby
 edge = Redgraph::Edge.new(src: actor, dest: film, type: 'ACTOR_IN', properties: {role: "Tony Montana"})
 => #<Redgraph::Edge:0x00007f8d5f9ae3d8 @dest=#<Redgraph::Node:0x00007f8d5f85ccc8 @id=1, @label="film", @properties={:name=>"Scarface"}>, @dest_id=1, @properties={:role=>"Tony Montana"}, @src=#<Redgraph::Node:0x00007f8d5f95cf88 @id=0, @label="actor", @properties={:name=>"Al Pacino"}>, @src_id=0, @type="ACTOR_IN">
-@graph.add_edge(edge)
+graph.add_edge(edge)
 => #<Redgraph::Edge:0x00007f8d5f9ae3d8 @dest=#<Redgraph::Node:0x00007f8d5f85ccc8 @id=1, @label="film", @properties={:name=>"Scarface"}>, @dest_id=1, @id=0, @properties={:role=>"Tony Montana"}, @src=#<Redgraph::Node:0x00007f8d5f95cf88 @id=0, @label="actor", @properties={:name=>"Al Pacino"}>, @src_id=0, @type="ACTOR_IN">
 ```
 
@@ -71,52 +71,52 @@ graph.merge_node(film)
 Same with edges:
 
 ```ruby
-@graph.merge_edge(edge)
+graph.merge_edge(edge)
 => #<Redgraph::Edge:0x00007f8d5f9ae3d8 @dest=#<Redgraph::Node:0x00007f8d5f85ccc8 @id=1, @label="film", @properties={:name=>"Scarface"}>, @dest_id=1, @id=0, @properties={:role=>"Tony Montana"}, @src=#<Redgraph::Node:0x00007f8d5f95cf88 @id=0, @label="actor", @properties={:name=>"Al Pacino"}>, @src_id=0, @type="ACTOR_IN">
 ```
 
 Find a node by id:
 
 ```ruby
-@graph.find_node_by_id(1)
+graph.find_node_by_id(1)
 => #<Redgraph::Node:0x00007f8d5c2c6e88 @id=1, @label="film", @properties={"name"=>"Scarface"}>
 ```
 
 To get all nodes:
 
 ```ruby
-@graph.nodes
+graph.nodes
 => [#<Redgraph::Node:0x00007f8d5c2ee0a0 @id=0, @label="actor", @properties={"name"=>"Al Pacino"}>, #<Redgraph::Node:0x00007f8d5c2edfd8 @id=1, @label="film", @properties={"name"=>"Scarface"}>]
 ```
 
 Optional filters that can be combined:
 
 ```ruby
-@graph.nodes(label: 'actor')
-@graph.nodes(properties: {name: "Al Pacino"})
-@graph.nodes(limit: 10, skip: 20)
+graph.nodes(label: 'actor')
+graph.nodes(properties: {name: "Al Pacino"})
+graph.nodes(limit: 10, skip: 20)
 ```
 
 Counting nodes
 
 ```ruby
-@graph.count_nodes(label: 'actor')
+graph.count_nodes(label: 'actor')
 => 1
 ```
 
 Getting edges:
 
 ```ruby
-@graph.edges
-@graph.edges(src: actor, dest: film)
-@graph.edges(kind: 'FRIEND_OF', limit: 10, skip: 20)
-@graph.count_edges
+graph.edges
+graph.edges(src: actor, dest: film)
+graph.edges(kind: 'FRIEND_OF', limit: 10, skip: 20)
+graph.count_edges
 ```
 
 Running custom queries
 
 ```ruby
-@graph.query("MATCH (src)-[edge:FRIEND_OF]->(dest) RETURN src, edge")
+graph.query("MATCH (src)-[edge:FRIEND_OF]->(dest) RETURN src, edge")
 ```
 
 ### NodeModel
@@ -136,7 +136,7 @@ And this will give you stuff such as
 ```ruby
 Actor.count
 john = Actor.new(name: "John Travolta")
-john.add_to_graph # Will add the node to the graph
+john.add_to_graph
 john.add_relation(type: "ACTED_IN", node: film, properties: {role: "Tony Manero"})
 john.reload
 john.destroy
