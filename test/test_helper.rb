@@ -16,7 +16,8 @@ require "minitest/autorun"
 require "pry"
 
 unless $REDIS_URL = ENV['TEST_REDIS_URL']
-  puts "To run the tests you need to define the TEST_REDIS_URL environment variable"
+  puts "To run the tests you need to define the TEST_REDIS_URL environment variable. Ex:"
+  puts "  TEST_REDIS_URL=redis://localhost:6379/0"
   exit(1)
 end
 
