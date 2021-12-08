@@ -19,7 +19,7 @@ module Redgraph
       @graph_name = graph_name
       @connection = Redis.new(redis_options)
       @module_version = module_version
-      raise ServerError unless @module_version
+      raise ServerError, "Can't find RedisGraph module" unless @module_version
     end
 
     # Returns the version of the RedisGraph module
