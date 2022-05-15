@@ -1,4 +1,7 @@
+## [0.2.2] - 2022-05-15
+
 - Nodes allow multiple labels
+- Friendlier exception message when the RedisGraph module is missing
 
 ## [0.2.1]
 
