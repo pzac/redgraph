@@ -5,6 +5,10 @@
 
 A simple RedisGraph library. This gem owes **a lot** to the existing [redisgraph-rb](https://github.com/RedisGraph/redisgraph-rb) gem, but tries to provide a friendlier interface, similar to the existing [Python](https://github.com/RedisGraph/redisgraph-py) and [Elixir](https://github.com/crflynn/redisgraph-ex) clients.
 
+## July 2023 update:
+
+Sadly RedisGraph is no longer in active development. More info [here](https://redis.com/blog/redisgraph-eol/).
+
 ## Installation
 
 Add this line to your application's Gemfile:
