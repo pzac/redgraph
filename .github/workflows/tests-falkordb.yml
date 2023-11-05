@@ -1,4 +1,4 @@
-name: Ruby
+name: Test with FalkorDB
 
 on: [push,pull_request]
 
@@ -16,11 +16,11 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 3.0.0
+        ruby-version: 3.2.2
     - name: Run the default task
       env:
         TEST_REDIS_URL: redis://localhost:6379/0
       run: |
-        gem install bundler -v 2.2.15
+        gem install bundler -v 2.4.10
         bundle install
         bundle exec rake
