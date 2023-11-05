@@ -9,6 +9,10 @@ A simple RedisGraph library. This gem owes **a lot** to the existing [redisgraph
 
 Sadly RedisGraph is no longer in active development. More info [here](https://redis.com/blog/redisgraph-eol/).
 
+## Nov 2023 update:
+
+There is an active fork, [FalkorDB](https://github.com/FalkorDB/FalkorDB/). AFAIK at this time there are no arm64 builds available.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -174,7 +178,7 @@ To install this gem onto your local machine, run `bundle exec rake install`.
 
 If you're using an Apple silicon mac you might want to use the docker image: I've had issues compiling the module (OpenMP problems). Just do a:
 
-    docker run -p 6380:6379 -it --rm redislabs/redisgraph
+    docker run -p 6380:6379 -it --rm falkordb/falkordb:edge
     TEST_REDIS_URL=redis://localhost:6380/0 be rake test
 
 I'm using port 6380 to not interphere with the other redis instance.
