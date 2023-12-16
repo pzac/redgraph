@@ -26,7 +26,7 @@ class GraphNodeMethodsTest < Minitest::Test
   end
 
   def test_find_node_by_wrong_id
-    node = @graph.find_node_by_id("-1")
+    node = @graph.find_node_by_id(999999)
 
     assert_nil(node)
   end

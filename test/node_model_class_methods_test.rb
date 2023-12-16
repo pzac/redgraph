@@ -65,7 +65,7 @@ class NodeModelClassMethodsTest < Minitest::Test
 
   def test_find_bad_id
     quick_add_node(label: 'actor', properties: {name: "Al Pacino"})
-    item = Actor.find("-1")
+    item = Actor.find(999999)
     assert_nil(item)
   end
 
