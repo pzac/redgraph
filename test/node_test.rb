@@ -17,7 +17,7 @@ class NodeTest < Minitest::Test
 
   def test_conflicting_labels
     assert_raises(Redgraph::Error) do
-      node = Redgraph::Node.new(labels: ["film", "drama"], label: "film")
+      Redgraph::Node.new(labels: ["film", "drama"], label: "film")
     end
   end
 end
