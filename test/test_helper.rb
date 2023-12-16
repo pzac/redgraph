@@ -13,6 +13,7 @@ $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "redgraph"
 
 require "minitest/autorun"
+require "minitest/focus"
 require "pry"
 
 unless $REDIS_URL = ENV['TEST_REDIS_URL']
