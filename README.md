@@ -13,6 +13,10 @@ Sadly RedisGraph is no longer in active development. More info [here](https://re
 
 There is an active fork, [FalkorDB](https://github.com/FalkorDB/FalkorDB/). AFAIK at this time there are no arm64 builds available.
 
+## Dec 2023 update:
+
+FalkorDB has arm64 builds now.
+
 ## Installation
 
 Add this line to your application's Gemfile:
