@@ -99,7 +99,11 @@ module Redgraph
     private
 
     def _query(cmd)
-      data = @connection.call("GRAPH.QUERY", graph_name, cmd, "--compact")
+      data = nil
+      query = ["GRAPH.QUERY", graph_name, cmd, "--compact"]
+      ActiveSupport::Notifications.instrument(NOTIFICATIONS_KEY, query: query.join(' ')) do
+        data = @connection.call(*query)
+      end
       QueryResponse.new(data, self)
     end
   end

@@ -1,3 +1,7 @@
+## [0.2.3] - 2023-12-17
+
+- Add ActiveSupport notifications
+
 ## [0.2.2] - 2022-05-15
 
 - Nodes allow multiple labels

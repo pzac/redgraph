@@ -42,4 +42,15 @@ class GraphQueriesTest < Minitest::Test
     result = @graph.query("MATCH (src)-[edge:FRIEND_OF]->(dest) RETURN src, edge")
     assert_equal([[@al, edge]], result)
   end
+
+  def test_query_notifications
+    payload = nil
+    subscription = ActiveSupport::Notifications.subscribe Redgraph::NOTIFICATIONS_KEY do |name, start, finish, id, _payload|
+      payload = _payload
+    end
+
+    query = "MATCH (n) RETURN n.name ORDER BY n.name"
+    result = @graph.query(query)
+    assert_includes(payload[:query], query)
+  end
 end

@@ -164,6 +164,10 @@ Actor.query("MATCH (node) RETURN node ORDER BY node.name")
 ```
 And the result rows object will be instances of the classes defined by the `_type` attribute.
 
+### Notifications
+
+You can optionally subscribe to `redgraph.query` ActiveSupport notifications.
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run 
